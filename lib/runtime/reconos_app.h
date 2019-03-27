@@ -80,7 +80,7 @@ void reconos_app_cleanup();
  *
  *   rt   - pointer to the ReconOS thread
  */
-struct reconos_thread *reconos_thread_create_hwt_<<Name>>();
+struct reconos_thread *reconos_thread_create_hwt_<<Name>>(void * init_data);
 <<=end generate=>>
 
 <<=generate for HasSw=>>
@@ -89,7 +89,7 @@ struct reconos_thread *reconos_thread_create_hwt_<<Name>>();
  *
  *   rt   - pointer to the ReconOS thread
  */
-struct reconos_thread *reconos_thread_create_swt_<<Name>>();
+struct reconos_thread *reconos_thread_create_swt_<<Name>>(void * init_data);
 <<=end generate=>>
 
 /*
