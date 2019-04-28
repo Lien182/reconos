@@ -126,13 +126,10 @@ architecture arch_imp of touch_v1_0_S00_AXI is
 	constant C_AVG_COUNT     : integer := 32;
     constant C_AVG_COUNT_LOG : integer := 5;
 	
-	type STATE_TYPE is (STATE_THREAD_INIT, STATE_INIT_DATA,
-                            STATE_WAIT, STATE_CTRL, STATE_IRQ_START, STATE_IRQ_END, STATE_IRQ_MIDDLE,
+	type STATE_TYPE is (    STATE_IRQ_START, STATE_IRQ_END, STATE_IRQ_MIDDLE,
                             STATE_START_X_0, STATE_START_X_1, STATE_READ_X_0, STATE_READ_X_1, STATE_READ_X_2, STATE_CHK_X, STATE_AVG_X,
-                            STATE_START_Y_0, STATE_START_Y_1, STATE_READ_Y_0, STATE_READ_Y_1, STATE_READ_Y_2, STATE_CHK_Y, STATE_AVG_Y,
-                            STATE_POS, STATE_SCALE,
-                            STATE_STORE_POS, STATE_STORE_DELTA,
-                            STATE_SAW, STATE_PERF_BEGIN, STATE_PERF_END);
+                            STATE_START_Y_0, STATE_START_Y_1, STATE_READ_Y_0, STATE_READ_Y_1, STATE_READ_Y_2, STATE_CHK_Y, STATE_AVG_Y, STATE_SCALE );
+                            
     signal state : STATE_TYPE;
 
     signal irq_s_0, irq_s_1 : std_logic;
@@ -142,8 +139,6 @@ architecture arch_imp of touch_v1_0_S00_AXI is
     signal sm_start, sm_ready, sm_conti : std_logic;
     signal sm_txdata, sm_rxdata         : std_logic_vector(7 downto 0);
     
-    signal wait_count : unsigned(23 downto 0);
-
     signal x_pos, y_pos           : unsigned(11 downto 0);
     signal x_pos_last, y_pos_last : unsigned(11 downto 0);
     signal x_pos_sum, y_pos_sum   : unsigned(11 + C_AVG_COUNT_LOG downto 0);
@@ -152,7 +147,6 @@ architecture arch_imp of touch_v1_0_S00_AXI is
     signal x_pos_avg, y_pos_avg : std_logic_vector(11 downto 0);
     signal x_pos_s, y_pos_s     : std_logic_vector(11 downto 0);
 
-    signal ctrl_wait : unsigned(23 downto 0);
     signal ctrl_avg : std_logic_vector(3 downto 0);
 
     signal ignore, ret : std_logic_vector(31 downto 0);
@@ -160,6 +154,9 @@ architecture arch_imp of touch_v1_0_S00_AXI is
     signal scale_start, scale_done, scale_idle, scale_ready : std_logic;
     signal scale_x_pos_s, scale_y_pos_s                     : std_logic_vector(11 downto 0);
     signal scale_x_pos_s_vld, scale_y_pos_s_vld             : std_logic;
+
+    signal cycle_cnt : unsigned(19 downto 0);
+
 
     component scale is
         port (
@@ -409,27 +406,23 @@ begin
 
 	-- Add user logic here
     osfsm_proc: process (S_AXI_ACLK,S_AXI_ARESETN) is
-            variable resume, done : boolean;
         begin
             if S_AXI_ARESETN = '0' then
                 
-                slv_reg0 <= (others => '0');
-                slv_reg1 <= (others => '0');
+                slv_reg0 <= '0' & (30 downto 0 => '0');
+                slv_reg1 <= '0' & (30 downto 0 => '0');
                 slv_reg2 <= (others => '0');
                 slv_reg3 <= (others => '0');
                 
-                wait_count    <= (others => '0');
+                cycle_cnt <= (others=>'0');
+                
                 pos_sum_count <= (others => '0');
     
                 state <= STATE_IRQ_START;
             elsif rising_edge(S_AXI_ACLK) then
-                wait_count <= wait_count + 1;
-    
-                case state is        
-   
+                  
+                 case state is 
                     when STATE_IRQ_START =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         x_pos_sum     <= (others => '0');
                         pos_sum_count <= (others => '0');
     
@@ -438,34 +431,21 @@ begin
                         end if;
     
                     when STATE_START_X_0 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
-                        state <= STATE_READ_X_0;
-    
+                         state <= STATE_READ_X_0;
                     when STATE_START_X_1 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
-                        state <= STATE_READ_X_1;
-    
+                         state <= STATE_READ_X_1;
                     when STATE_READ_X_0 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         if sm_ready = '1' then
                             state <= STATE_READ_X_1;
                         end if;
     
                     when STATE_READ_X_1 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         if sm_ready = '1' then
-                            x_pos(11 downto 5) <= unsigned(sm_rxdata(6 downto 0));
-    
+                            x_pos(11 downto 5) <= unsigned(sm_rxdata(6 downto 0));    
                             state <= STATE_READ_X_2;
                         end if;
     
                     when STATE_READ_X_2 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         if sm_ready = '1' then
                             x_pos(4 downto 0) <= unsigned(sm_rxdata(7 downto 3));
     
@@ -482,9 +462,7 @@ begin
                         end if;
     
                     when STATE_CHK_X =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
-                        if x_pos_last > x_pos then
+                         if x_pos_last > x_pos then
                             if (x_pos_last - x_pos) > 8 then
                                 x_pos_sum     <= (others => '0');
                                 pos_sum_count <= (others => '0');
@@ -505,16 +483,12 @@ begin
                         end if;
     
                     when STATE_AVG_X =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         x_pos_last <= x_pos;
                         x_pos_sum <= x_pos_sum + x_pos;
     
                         state <= STATE_START_X_1;
     
                     when STATE_IRQ_MIDDLE =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         y_pos_sum     <= (others => '0');
                         pos_sum_count <= (others => '0');
     
@@ -525,25 +499,17 @@ begin
                         end if;
     
                     when STATE_START_Y_0 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
-                        state <= STATE_READ_Y_0;
+                         state <= STATE_READ_Y_0;
     
                     when STATE_START_Y_1 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
-                        state <= STATE_READ_Y_1;
+                         state <= STATE_READ_Y_1;
     
                     when STATE_READ_Y_0 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         if sm_ready = '1' then
                             state <= STATE_READ_Y_1;
                         end if;
     
                     when STATE_READ_Y_1 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         if sm_ready = '1' then
                             y_pos(11 downto 5) <= unsigned(sm_rxdata(6 downto 0));
     
@@ -551,8 +517,6 @@ begin
                         end if;
     
                     when STATE_READ_Y_2 =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         if sm_ready = '1' then
                             y_pos(4 downto 0) <= unsigned(sm_rxdata(7 downto 3));
     
@@ -569,8 +533,6 @@ begin
                         end if;
     
                     when STATE_CHK_Y =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         if y_pos_last > y_pos then
                             if (y_pos_last - y_pos) > 8 then
                                 y_pos_sum     <= (others => '0');
@@ -592,21 +554,16 @@ begin
                         end if;
     
                     when STATE_AVG_Y =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
                         y_pos_last <= y_pos;
                         y_pos_sum <= y_pos_sum + y_pos;
     
                         state <= STATE_START_Y_1;
     
                     when STATE_IRQ_END =>
-                        ctrl_wait <= ctrl_wait + 1;
-    
-                        if irq_s_0 = '0' then
+                         if irq_s_0 = '0' then
                             state <= STATE_SCALE;
-                            wait_count <= (others => '0');
                         else
-                            state <= STATE_IRQ_START;
+                            state <= STATE_IRQ_START;                                                    
                         end if;
     
                     when STATE_SCALE =>
@@ -614,23 +571,47 @@ begin
                             state <= STATE_IRQ_START;
                         end if;
     
+                        cycle_cnt <= cycle_cnt + 1;
+    
+    
                         if scale_x_pos_s_vld = '1' then
-                           slv_reg0 <= (31 downto x_pos_s'length => scale_x_pos_s(x_pos_s'length-1)) & scale_x_pos_s;
-                           slv_reg2 <= std_logic_vector(unsigned(slv_reg2) + 1);
+                           slv_reg0 <= std_logic_vector(cycle_cnt) & scale_x_pos_s;
                         end if;
     
                         if scale_y_pos_s_vld = '1' then
-                           slv_reg1 <= (31 downto y_pos_s'length => scale_y_pos_s(y_pos_s'length-1)) & scale_y_pos_s;
-                           slv_reg3 <= std_logic_vector(unsigned(slv_reg3) + 1);
-                        end if; 
-                        
-                        
-
-                    when others =>
-    
+                           slv_reg1 <= std_logic_vector(cycle_cnt) & scale_y_pos_s;
+                        end if;   
                 end case;
             end if;
         end process osfsm_proc;
+        
+        
+
+        
+        
+--        process(state) begin
+--        case state is
+--          when STATE_IRQ_START  => slv_reg0  <= x"00000001";
+--          when STATE_IRQ_END    => slv_reg0  <= x"00000002";
+--          when STATE_IRQ_MIDDLE => slv_reg0  <= x"00000003";
+--          when STATE_START_X_0  => slv_reg0  <= x"00000004";
+--          when STATE_START_X_1  => slv_reg0  <= x"00000005";
+--          when STATE_READ_X_0   => slv_reg0  <= x"00000006";
+--          when STATE_READ_X_1   => slv_reg0  <= x"00000007";
+--          when STATE_READ_X_2   => slv_reg0  <= x"00000008";
+--          when STATE_CHK_X      => slv_reg0  <= x"00000009";
+--          when STATE_AVG_X      => slv_reg0  <= x"0000000A";
+--          when STATE_START_Y_0  => slv_reg0  <= x"0000000B";
+--          when STATE_START_Y_1  => slv_reg0  <= x"0000000C";
+       
+--          when STATE_READ_Y_0   => slv_reg0  <= x"0000000D";
+--          when STATE_READ_Y_1   => slv_reg0  <= x"0000000E";
+--          when STATE_READ_Y_2   => slv_reg0  <= x"0000000F";
+--          when STATE_CHK_Y      => slv_reg0  <= x"00000010";
+--          when STATE_AVG_Y      => slv_reg0  <= x"00000011";
+--          when STATE_SCALE      => slv_reg0  <= x"00000012";
+--        end case;
+--        end process;
     
         x_pos_avg <= std_logic_vector(x_pos_sum(11 + C_AVG_COUNT_LOG downto C_AVG_COUNT_LOG));
         y_pos_avg <= std_logic_vector(y_pos_sum(11 + C_AVG_COUNT_LOG downto C_AVG_COUNT_LOG));
@@ -675,7 +656,7 @@ begin
                      (others => '0');
     
     
-    
+ 
         sm_inst : spi_master
             generic map (
                 G_SM_CLK_PRD  => 10ns,
@@ -702,7 +683,7 @@ begin
         scale_inst : scale
             port map (
                 ap_clk => S_AXI_ACLK,
-                ap_rst => not S_AXI_ARESETN,
+                ap_rst => (not S_AXI_ARESETN),
                 ap_start => scale_start,
                 ap_done  => scale_done,
                 ap_idle  => scale_idle,
