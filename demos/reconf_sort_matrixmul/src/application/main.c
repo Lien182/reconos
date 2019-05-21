@@ -218,7 +218,7 @@ int main(int argc, char **argv) {
 	}
 	for (i = 0; i < num_hwts; i++) {
 		log(" %d", i);
-		reconos_hwts[i]=reconos_thread_create_hwt_reconf();
+		reconos_hwts[i]=reconos_thread_create_hwt_reconf(NULL);
 	}
 	log("\n");
 
@@ -229,7 +229,7 @@ int main(int argc, char **argv) {
 	log("creating %d sw-thread:", num_swts);
 	for (i = 0; i < num_swts; i++) {
 		log(" %d", i);
-		reconos_swts[i]=reconos_thread_create_swt_sortdemo();
+		reconos_swts[i]=reconos_thread_create_swt_sortdemo(NULL);
 	}
 	log("\n");
 
@@ -325,7 +325,7 @@ int main(int argc, char **argv) {
 	/* create matrixmul software threads */
 	for(i = 0; i< num_swts; i++){
 		log("Creating MatrixMul SWT %d\n",i);
-		reconos_swts[i] = reconos_thread_create_swt_matrixmul();
+		reconos_swts[i] = reconos_thread_create_swt_matrixmul(NULL);
 	}
 
 

@@ -1,0 +1,19 @@
+Creating config memory files...
+INFO: [Writecfgmem 68-23] Start address provided has been multiplied by a factor of 4 due to the use of interface SMAPX32.
+Creating bitstream load up from address 0x00000000
+Loading bitfile ./Bitstreams/config_sortdemo_pblock_slot_0_partial.bit
+WARNING: [Writecfgmem 68-34] Bitfile ./Bitstreams/config_sortdemo_pblock_slot_0_partial.bit is a partial reconfiguration bitfile. It is not possible to validate that this bitfile is compatible with the SMAPX32 interface.
+Memory size is calculated to be 1 MB
+Writing file ./Bitstreams/config_sortdemo_pblock_slot_0_partial_pcap.bin
+Writing log file ./Bitstreams/config_sortdemo_pblock_slot_0_partial_pcap.prm
+===================================
+Configuration Memory information
+===================================
+File Format        BIN
+Interface          SMAPX32
+Size               1M
+Start Address      0x00000000
+End Address        0x000FFFFF
+
+Addr1         Addr2         Date                    File(s)
+0x00000000    0x000D168B    May 20 20:15:50 2019    ./Bitstreams/config_sortdemo_pblock_slot_0_partial.bit

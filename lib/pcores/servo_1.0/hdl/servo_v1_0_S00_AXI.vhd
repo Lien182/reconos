@@ -435,12 +435,12 @@ begin
 
 	-- Add user logic here
     
-    srv0_c <= srv0_a * 100 + C_SRV0_CAL;
-    srv1_c <= srv1_a * 100 + C_SRV1_CAL;
-    srv2_c <= srv2_a * 100 + C_SRV2_CAL;
-    srv3_c <= srv3_a * 100 + C_SRV3_CAL;
-    srv4_c <= srv4_a * 100 + C_SRV4_CAL;
-    srv5_c <= srv5_a * 100 + C_SRV5_CAL;
+ 		srv0_c <= unsigned(slv_reg0(10 downto 0)) * 100 + C_SRV0_CAL;
+    srv1_c <= unsigned(slv_reg1(10 downto 0)) * 100 + C_SRV1_CAL;
+    srv2_c <= unsigned(slv_reg2(10 downto 0)) * 100 + C_SRV2_CAL;
+    srv3_c <= unsigned(slv_reg3(10 downto 0)) * 100 + C_SRV3_CAL;
+    srv4_c <= unsigned(slv_reg4(10 downto 0)) * 100 + C_SRV4_CAL;
+    srv5_c <= unsigned(slv_reg5(10 downto 0)) * 100 + C_SRV5_CAL;
 
     srv_proc: process(S_AXI_ACLK) is
     begin

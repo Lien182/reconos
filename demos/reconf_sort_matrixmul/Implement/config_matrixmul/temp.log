@@ -1,0 +1,5 @@
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00.74 ; elapsed = 00:00:00.66 . Memory (MB): peak = 2285.719 ; gain = 0.000 ; free physical = 10383 ; free virtual = 12502
