@@ -1662,7 +1662,7 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
   connect_bd_intf_net -intf_net axi_gpio_0_GPIO2 [get_bd_intf_ports GPIO_BTN] [get_bd_intf_pins axi_gpio_0/GPIO2]
  
 
-connect_bd_intf_net -intf_net axi_hwt_M07_AXI [get_bd_intf_pins axi_dmac_0/s_axi] [get_bd_intf_pins axi_hwt/M07_AXI]
+  connect_bd_intf_net -intf_net axi_hwt_M07_AXI [get_bd_intf_pins axi_dmac_0/s_axi] [get_bd_intf_pins axi_hwt/M07_AXI]
   connect_bd_intf_net -intf_net axi_hwt_M08_AXI [get_bd_intf_pins axi_hdmi_tx_0/s_axi] [get_bd_intf_pins axi_hwt/M08_AXI]
   connect_bd_intf_net -intf_net axi_hwt_M09_AXI [get_bd_intf_pins axi_clkgen_0/s_axi] [get_bd_intf_pins axi_hwt/M09_AXI]
   connect_bd_intf_net -intf_net axi_hwt_M10_AXI [get_bd_intf_pins axi_hwt/M10_AXI] [get_bd_intf_pins iic_main/S_AXI]
@@ -1672,14 +1672,14 @@ connect_bd_intf_net -intf_net axi_hwt_M07_AXI [get_bd_intf_pins axi_dmac_0/s_axi
   connect_bd_intf_net -intf_net axi_hwt_M14_AXI [get_bd_intf_pins axi_hwt/M14_AXI] [get_bd_intf_pins axi_iic_ad7611/S_AXI]
   connect_bd_intf_net -intf_net axi_hwt_M15_AXI [get_bd_intf_pins axi_gpio_0/S_AXI] [get_bd_intf_pins axi_hwt/M15_AXI]
   
-connect_bd_intf_net -intf_net axi_iic_0_IIC [get_bd_intf_ports IIC] [get_bd_intf_pins iic_main/IIC]
+  connect_bd_intf_net -intf_net axi_iic_0_IIC [get_bd_intf_ports IIC] [get_bd_intf_pins iic_main/IIC]
   connect_bd_intf_net -intf_net axi_iic_0_IIC1 [get_bd_intf_ports IIC_2] [get_bd_intf_pins axi_iic_ad7611/IIC]
   connect_bd_intf_net -intf_net axi_iic_1_IIC [get_bd_intf_ports IIC_1] [get_bd_intf_pins iic_fmc/IIC]
   connect_bd_intf_net -intf_net axi_interconnect_0_M00_AXI [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins processing_system7_0/S_AXI_HP0]
   connect_bd_intf_net -intf_net axi_interconnect_1_M00_AXI [get_bd_intf_pins axi_interconnect_1/M00_AXI] [get_bd_intf_pins processing_system7_0/S_AXI_HP1]
   
-connect_bd_net -net SW0_1 [get_bd_ports SW0] [get_bd_pins xlconcat_1/In1]
-connect_bd_net -net axi_clkgen_0_clk_0 [get_bd_pins axi_clkgen_0/clk_0] [get_bd_pins axi_hdmi_tx_0/hdmi_clk]
+  connect_bd_net -net SW0_1 [get_bd_ports SW0] [get_bd_pins xlconcat_1/In1]
+  connect_bd_net -net axi_clkgen_0_clk_0 [get_bd_pins axi_clkgen_0/clk_0] [get_bd_pins axi_hdmi_tx_0/hdmi_clk]
   connect_bd_net -net axi_dmac_0_irq [get_bd_pins axi_dmac_0/irq] [get_bd_pins xlconcat_0/In13]
   connect_bd_net -net axi_dmac_1_fifo_wr_overflow [get_bd_ports LD5] [get_bd_pins axi_dmac_rx/fifo_wr_overflow] [get_bd_pins axi_hdmi_rx_0/hdmi_dma_ovf]
   connect_bd_net -net axi_dmac_1_irq [get_bd_pins axi_dmac_rx/irq] [get_bd_pins xlconcat_0/In10]
@@ -1703,15 +1703,17 @@ connect_bd_net -net axi_clkgen_0_clk_0 [get_bd_pins axi_clkgen_0/clk_0] [get_bd_
  
   connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_pins axi_clkgen_0/clk] [get_bd_pins processing_system7_0/FCLK_CLK1]
   connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins axi_dmac_rx/m_dest_axi_aclk] [get_bd_pins axi_interconnect_1/ACLK] [get_bd_pins axi_interconnect_1/M00_ACLK] [get_bd_pins axi_interconnect_1/S00_ACLK] [get_bd_pins processing_system7_0/FCLK_CLK2] [get_bd_pins processing_system7_0/S_AXI_HP1_ACLK]
-    connect_bd_net -net xlconcat_0_dout [get_bd_pins processing_system7_0/IRQ_F2P] [get_bd_pins xlconcat_0/dout]
+  connect_bd_net -net xlconcat_0_dout [get_bd_pins processing_system7_0/IRQ_F2P] [get_bd_pins xlconcat_0/dout]
   connect_bd_net -net xlconcat_1_dout [get_bd_pins processing_system7_0/GPIO_I] [get_bd_pins xlconcat_1/dout]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins xlconcat_0/In0] [get_bd_pins xlconcat_0/In1] [get_bd_pins xlconcat_0/In2] [get_bd_pins xlconcat_0/In3] [get_bd_pins xlconcat_0/In4] [get_bd_pins xlconcat_0/In5] [get_bd_pins xlconcat_0/In6] [get_bd_pins xlconcat_0/In7] [get_bd_pins xlconstant_0/dout]
   connect_bd_net -net xlconstant_1_dout [get_bd_ports LD0] [get_bd_pins xlconstant_1/dout]
   connect_bd_net -net xlconstant_2_dout [get_bd_pins axi_hdmi_rx_0/hdmi_dma_unf] [get_bd_pins gnd/dout]
   connect_bd_net -net xlslice_0_Dout [get_bd_ports LD4] [get_bd_pins xlslice_0/Dout]
 
-
-create_bd_addr_seg -range 0x00010000 -offset 0x79000000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_clkgen_0/s_axi/axi_lite] SEG_axi_clkgen_0_axi_lite
+#Set Address Ranges
+  create_bd_addr_seg -range 0x20000000 -offset 0x00000000 [get_bd_addr_spaces axi_dmac_0/m_src_axi] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] SEG_processing_system7_0_HP0_DDR_LOWOCM
+  create_bd_addr_seg -range 0x20000000 -offset 0x00000000 [get_bd_addr_spaces axi_dmac_rx/m_dest_axi] [get_bd_addr_segs processing_system7_0/S_AXI_HP1/HP1_DDR_LOWOCM] SEG_processing_system7_0_HP1_DDR_LOWOCM
+  create_bd_addr_seg -range 0x00010000 -offset 0x79000000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_clkgen_0/s_axi/axi_lite] SEG_axi_clkgen_0_axi_lite
   create_bd_addr_seg -range 0x00001000 -offset 0x43000000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_dmac_0/s_axi/axi_lite] SEG_axi_dmac_0_axi_lite
   create_bd_addr_seg -range 0x00001000 -offset 0x43C20000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_dmac_rx/s_axi/axi_lite] SEG_axi_dmac_rx_axi_lite
   create_bd_addr_seg -range 0x00001000 -offset 0x41200000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] SEG_axi_gpio_0_Reg
@@ -1722,20 +1724,6 @@ create_bd_addr_seg -range 0x00010000 -offset 0x79000000 [get_bd_addr_spaces proc
   create_bd_addr_seg -range 0x00001000 -offset 0x41600000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs iic_main/S_AXI/Reg] SEG_iic_main_Reg
   create_bd_addr_seg -range 0x20000000 -offset 0x00000000 [get_bd_addr_spaces reconos_memif_memory_controller_0/M_AXI] [get_bd_addr_segs processing_system7_0/S_AXI_ACP/ACP_DDR_LOWOCM] SEG_processing_system7_0_ACP_DDR_LOWOCM
   create_bd_addr_seg -range 0x40000000 -offset 0x40000000 [get_bd_addr_spaces reconos_memif_memory_controller_0/M_AXI] [get_bd_addr_segs processing_system7_0/S_AXI_ACP/ACP_M_AXI_GP0] SEG_processing_system7_0_ACP_M_AXI_GP0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	<<generate for SLOTS>>
