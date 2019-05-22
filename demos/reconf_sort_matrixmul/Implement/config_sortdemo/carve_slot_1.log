@@ -1,6 +1,0 @@
-INFO: [Designutils 20-2277] Running 'update_design -black_box' on cell design_1_i/slot_1. The cell has HD.RECONFIGURABLE property set to true and it will be turned into a black-box cell after this command.
-INFO: [Timing 38-35] Done setting XDC timing constraints.
-INFO: [DRC 23-27] Running DRC with 8 threads
-INFO: [Project 1-461] DRC finished with 0 Errors
-INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
-INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
