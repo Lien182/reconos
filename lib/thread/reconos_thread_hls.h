@@ -25,6 +25,8 @@
 
 #include "hls_stream.h"
 #include "ap_cint.h"
+#include "ap_int.h"
+#include "ap_fixed.h"
 
 /* == Thread resources ================================================= */
 
@@ -52,6 +54,7 @@
 #define THREAD_ENTRY() void rt_imp(hls::stream<uint32> osif_sw2hw,\
                                    hls::stream<uint32> osif_hw2sw,\
                                    hls::stream<uint32> memif_hwt2mem,\
-                                   hls::stream<uint32> memif_mem2hwt)
+                                   hls::stream<uint32> memif_mem2hwt,\
+                                   ap_uint<32> * debug_port )
 
 #endif /* RECONOS_THREAD_H */

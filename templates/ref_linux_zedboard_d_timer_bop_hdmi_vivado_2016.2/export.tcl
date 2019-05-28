@@ -196,7 +196,7 @@ proc reconos_hw_setup {new_project_name new_project_path reconos_ip_dir} {
     create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_mem
     create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_hwt
     set_property -dict [ list CONFIG.NUM_MI {1}  ] [get_bd_cells axi_mem]
-    set_property -dict [ list CONFIG.NUM_MI {16}  ] [get_bd_cells axi_hwt]
+    set_property -dict [ list CONFIG.NUM_MI {21}  ] [get_bd_cells axi_hwt]
 
     # Add reconos stuff
     create_bd_cell -type ip -vlnv cs.upb.de:reconos:reconos_clock:1.0 reconos_clock_0
@@ -225,6 +225,9 @@ proc reconos_hw_setup {new_project_name new_project_path reconos_ip_dir} {
     set_property -dict [list CONFIG.C_NUM_HWTS  <<NUM_SLOTS>> ] [get_bd_cells reconos_proc_control_0]
     
     create_bd_cell -type ip -vlnv cs.upb.de:reconos:timer:1.0 timer_0
+
+
+    #bop_0
 
     create_bd_cell -type ip -vlnv cs.upb.de:bop:servo:1.0 servo_0
 
@@ -259,6 +262,82 @@ proc reconos_hw_setup {new_project_name new_project_path reconos_ip_dir} {
     #Touch SSN
     create_bd_port -dir O JB4
     connect_bd_net [get_bd_ports JB4] [get_bd_pins touch_0/TC_SSn]
+
+
+    #bop_1
+
+    create_bd_cell -type ip -vlnv cs.upb.de:bop:servo:1.0 servo_1
+
+    create_bd_port -dir O VGA_HS
+    create_bd_port -dir O JA4
+    create_bd_port -dir O JA10
+    create_bd_port -dir O JB8
+    create_bd_port -dir O JB9
+    create_bd_port -dir O JB10 
+    connect_bd_net [get_bd_ports VGA_HS] [get_bd_pins servo_1/servo_0]
+    connect_bd_net [get_bd_ports JA4]  [get_bd_pins servo_1/servo_1]
+    connect_bd_net [get_bd_ports JA10] [get_bd_pins servo_1/servo_2]
+    connect_bd_net [get_bd_ports JB8]  [get_bd_pins servo_1/servo_3]
+    connect_bd_net [get_bd_ports JB9]  [get_bd_pins servo_1/servo_4]
+    connect_bd_net [get_bd_ports JB10] [get_bd_pins servo_1/servo_5]
+
+
+    create_bd_cell -type ip -vlnv cs.upb.de:bop:touch:1.0 touch_1
+
+    #Touch MISO
+    create_bd_port -dir I JC3_N 
+    connect_bd_net [get_bd_ports JC3_N] [get_bd_pins touch_1/TC_MISO]
+    #Touch INT
+    create_bd_port -dir I JC2_P
+    connect_bd_net [get_bd_ports JC2_P] [get_bd_pins touch_1/TC_IRQ]
+    #Touch SCLK
+    create_bd_port -dir O JC1_P 
+    connect_bd_net [get_bd_ports JC1_P] [get_bd_pins touch_1/TC_SCLK]
+    #Touch MOSI
+    create_bd_port -dir O JC3_P
+    connect_bd_net [get_bd_ports JC3_P] [get_bd_pins touch_1/TC_MOSI]
+    #Touch SSN
+    create_bd_port -dir O JC1_N
+    connect_bd_net [get_bd_ports JC1_N] [get_bd_pins touch_1/TC_SSn]
+
+
+    #bop 2
+    create_bd_cell -type ip -vlnv cs.upb.de:bop:servo:1.0 servo_2
+    create_bd_port -dir O JD1_N
+    create_bd_port -dir O JD3_N
+    create_bd_port -dir O JD2_P
+    create_bd_port -dir O JD4_P
+    create_bd_port -dir O JD2_N
+    create_bd_port -dir O JD4_N 
+    connect_bd_net [get_bd_ports JD1_N] [get_bd_pins servo_2/servo_0]
+    connect_bd_net [get_bd_ports JD3_N] [get_bd_pins servo_2/servo_1]
+    connect_bd_net [get_bd_ports JD2_P] [get_bd_pins servo_2/servo_2]
+    connect_bd_net [get_bd_ports JD4_P] [get_bd_pins servo_2/servo_3]
+    connect_bd_net [get_bd_ports JD2_N] [get_bd_pins servo_2/servo_4]
+    connect_bd_net [get_bd_ports JD4_N] [get_bd_pins servo_2/servo_5]
+
+
+    create_bd_cell -type ip -vlnv cs.upb.de:bop:touch:1.0 touch_2
+
+    #Touch MISO
+    create_bd_port -dir I JD1_P 
+    connect_bd_net [get_bd_ports JD1_P] [get_bd_pins touch_2/TC_MISO]
+    #Touch INT
+    create_bd_port -dir I JD3_P
+    connect_bd_net [get_bd_ports JD3_P] [get_bd_pins touch_2/TC_IRQ]
+    #Touch SCLK
+    create_bd_port -dir O JC4_P 
+    connect_bd_net [get_bd_ports JC4_P] [get_bd_pins touch_2/TC_SCLK]
+    #Touch MOSI
+    create_bd_port -dir O JC2_N
+    connect_bd_net [get_bd_ports JC2_N] [get_bd_pins touch_2/TC_MOSI]
+    #Touch SSN
+    create_bd_port -dir O JC4_N
+    connect_bd_net [get_bd_ports JC4_N] [get_bd_pins touch_2/TC_SSn]
+
+
+    #AXI TIMER
+    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_timer:2.0 axi_timer_0
 
 
 
@@ -1818,6 +1897,15 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     connect_bd_intf_net -intf_net axi_hwt_M05_AXI [get_bd_intf_pins axi_hwt/M05_AXI] [get_bd_intf_pins servo_0/S00_AXI]
     connect_bd_intf_net -intf_net axi_hwt_M06_AXI [get_bd_intf_pins axi_hwt/M06_AXI] [get_bd_intf_pins touch_0/S00_AXI]
 
+    connect_bd_intf_net -intf_net axi_hwt_M16_AXI [get_bd_intf_pins axi_hwt/M16_AXI] [get_bd_intf_pins servo_1/S00_AXI]
+    connect_bd_intf_net -intf_net axi_hwt_M17_AXI [get_bd_intf_pins axi_hwt/M17_AXI] [get_bd_intf_pins touch_1/S00_AXI]
+    connect_bd_intf_net -intf_net axi_hwt_M18_AXI [get_bd_intf_pins axi_hwt/M18_AXI] [get_bd_intf_pins servo_2/S00_AXI]
+    connect_bd_intf_net -intf_net axi_hwt_M19_AXI [get_bd_intf_pins axi_hwt/M19_AXI] [get_bd_intf_pins touch_2/S00_AXI]
+    connect_bd_intf_net -intf_net axi_hwt_M19_AXI [get_bd_intf_pins axi_hwt/M19_AXI] [get_bd_intf_pins touch_2/S00_AXI]
+    connect_bd_intf_net -intf_net axi_hwt_M20_AXI [get_bd_intf_pins axi_hwt/M20_AXI] [get_bd_intf_pins axi_timer_0/S_AXI]
+
+
+
     # Memory controller
     connect_bd_intf_net [get_bd_intf_pins reconos_memif_memory_controller_0/MEMIF_Hwt2Mem_In] [get_bd_intf_pins reconos_memif_mmu_zynq_0/MEMIF_Hwt2Mem_Out]
     connect_bd_intf_net [get_bd_intf_pins reconos_memif_memory_controller_0/MEMIF_Mem2Hwt_In] [get_bd_intf_pins reconos_memif_mmu_zynq_0/MEMIF_Mem2Hwt_Out]
@@ -1865,6 +1953,11 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
                             [get_bd_pins axi_hwt/M13_ACLK] \
                             [get_bd_pins axi_hwt/M14_ACLK] \
                             [get_bd_pins axi_hwt/M15_ACLK] \
+                            [get_bd_pins axi_hwt/M16_ACLK] \
+                            [get_bd_pins axi_hwt/M17_ACLK] \
+                            [get_bd_pins axi_hwt/M18_ACLK] \
+                            [get_bd_pins axi_hwt/M19_ACLK] \
+                            [get_bd_pins axi_hwt/M20_ACLK] \
                             [get_bd_pins axi_hwt/S00_ACLK] \
                             [get_bd_pins axi_dmac_0/s_axi_aclk] \
                             [get_bd_pins axi_dmac_0/m_src_axi_aclk] \
@@ -1885,6 +1978,11 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
                             [get_bd_pins timer_0/S_AXI_ACLK] \
                             [get_bd_pins servo_0/s00_axi_aclk] \
                             [get_bd_pins touch_0/s00_axi_aclk] \
+                            [get_bd_pins servo_1/s00_axi_aclk] \
+                            [get_bd_pins touch_1/s00_axi_aclk] \
+                            [get_bd_pins servo_2/s00_axi_aclk] \
+                            [get_bd_pins touch_2/s00_axi_aclk] \
+                            [get_bd_pins axi_timer_0/s_axi_aclk] \
                             [get_bd_pins axi_clkgen_0/s_axi_aclk]\
                             [get_bd_pins axi_interconnect_0/ACLK] \
                             [get_bd_pins axi_interconnect_0/S00_ACLK] \
@@ -1917,6 +2015,11 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
                             [get_bd_pins axi_hwt/M13_ARESETN] \
                             [get_bd_pins axi_hwt/M14_ARESETN] \
                             [get_bd_pins axi_hwt/M15_ARESETN] \
+                            [get_bd_pins axi_hwt/M16_ARESETN] \
+                            [get_bd_pins axi_hwt/M17_ARESETN] \
+                            [get_bd_pins axi_hwt/M18_ARESETN] \
+                            [get_bd_pins axi_hwt/M19_ARESETN] \
+                            [get_bd_pins axi_hwt/M20_ARESETN] \
                             [get_bd_pins axi_hwt/S00_ARESETN] \
                             [get_bd_pins axi_interconnect_0/M00_ARESETN] \
                             [get_bd_pins axi_interconnect_0/S00_ARESETN] \
@@ -1928,7 +2031,8 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
                             [get_bd_pins axi_hdmi_rx_0/s_axi_aresetn] \
                             [get_bd_pins axi_clkgen_0/s_axi_aresetn] \
                             [get_bd_pins axi_dmac_rx/s_axi_aresetn] \
-                            [get_bd_pins axi_dmac_0/s_axi_aresetn]
+                            [get_bd_pins axi_dmac_0/s_axi_aresetn] \
+                            [get_bd_pins axi_timer_0/s_axi_aresetn]
                             
     # Proc_control resets
     connect_bd_net [get_bd_pins reconos_proc_control_0/PROC_Sys_Rst] [get_bd_pins reconos_memif_arbiter_0/SYS_Rst]
@@ -1939,6 +2043,10 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins timer_0/S_AXI_ARESETN]
     connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins servo_0/s00_axi_aresetn]
     connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins touch_0/s00_axi_aresetn]
+    connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins servo_1/s00_axi_aresetn]
+    connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins touch_1/s00_axi_aresetn]
+    connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins servo_2/s00_axi_aresetn]
+    connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins touch_2/s00_axi_aresetn]
     connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins reconos_proc_control_0/S_AXI_ARESETN]
     connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins reconos_osif_intc_0/S_AXI_ARESETN]
     connect_bd_net [get_bd_pins reset_0/peripheral_aresetn] [get_bd_pins reconos_osif_0/S_AXI_ARESETN]
@@ -1960,6 +2068,11 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     set_property -dict [list CONFIG.C_BASEADDR {0x64a00000} CONFIG.C_HIGHADDR {0x64a0ffff}] [get_bd_cells timer_0]
     set_property -dict [list CONFIG.C_BASEADDR {0x43C00000} CONFIG.C_HIGHADDR {0x43C0ffff}] [get_bd_cells servo_0]
     set_property -dict [list CONFIG.C_BASEADDR {0x43C10000} CONFIG.C_HIGHADDR {0x43C1ffff}] [get_bd_cells touch_0]
+    set_property -dict [list CONFIG.C_BASEADDR {0x43C70000} CONFIG.C_HIGHADDR {0x43C7ffff}] [get_bd_cells servo_1]
+    set_property -dict [list CONFIG.C_BASEADDR {0x43C30000} CONFIG.C_HIGHADDR {0x43C3ffff}] [get_bd_cells touch_1]
+    set_property -dict [list CONFIG.C_BASEADDR {0x43C60000} CONFIG.C_HIGHADDR {0x43C0ffff}] [get_bd_cells servo_2]
+    set_property -dict [list CONFIG.C_BASEADDR {0x43C50000} CONFIG.C_HIGHADDR {0x43C5ffff}] [get_bd_cells touch_2]
+    set_property -dict [list CONFIG.C_BASEADDR {0x42800000} CONFIG.C_HIGHADDR {0x4280ffff}] [get_bd_cells axi_timer_0]
     set_property -dict [list CONFIG.C_BASEADDR {0x7b400000} CONFIG.C_HIGHADDR {0x7b40ffff}] [get_bd_cells reconos_osif_intc_0]
     set_property -dict [list CONFIG.C_BASEADDR {0x69e00000} CONFIG.C_HIGHADDR {0x69e0ffff}] [get_bd_cells reconos_clock_0]
     
@@ -1970,6 +2083,11 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     create_bd_addr_seg -range 64K -offset 0x69e00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {reconos_clock_0/S_AXI/reg0 }] SEG5
     create_bd_addr_seg -range 64K -offset 0x43C00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {servo_0/S00_AXI/S00_AXI_reg }] SEG6
     create_bd_addr_seg -range 64K -offset 0x43C10000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {touch_0/S00_AXI/S00_AXI_reg }] SEG7
+    create_bd_addr_seg -range 64K -offset 0x43C70000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {servo_1/S00_AXI/S00_AXI_reg }] SEG9
+    create_bd_addr_seg -range 64K -offset 0x43C30000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {touch_1/S00_AXI/S00_AXI_reg }] SEG10
+    create_bd_addr_seg -range 64K -offset 0x43C60000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {servo_2/S00_AXI/S00_AXI_reg }] SEG11
+    create_bd_addr_seg -range 64K -offset 0x43C50000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {touch_2/S00_AXI/S00_AXI_reg }] SEG12
+    create_bd_addr_seg -range 64K -offset 0x42800000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {axi_timer_0/S_AXI/Reg }] SEG13
 
     assign_bd_address [get_bd_addr_segs {processing_system7_0/S_AXI_ACP/ACP_DDR_LOWOCM }]
     assign_bd_address [get_bd_addr_segs {processing_system7_0/S_AXI_ACP/ACP_M_AXI_GP0 }]

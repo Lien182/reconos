@@ -29,7 +29,9 @@ entity rt_<<NAME>> is
 		HWT_Rst    : in  std_logic;
 		HWT_Signal : in  std_logic;
 
-		DEBUG : out std_logic_vector(135 downto 0)
+		DEBUG : out std_logic_vector(135 downto 0);
+
+		debug_port : out std_logic_vector(31 downto 0)
 	);
 end entity rt_<<NAME>>;
 
@@ -53,7 +55,11 @@ architecture implementation of rt_<<NAME>> is
 
 			memif_mem2hwt_v_dout    : in std_logic_vector (31 downto 0);
 			memif_mem2hwt_v_empty_n : in std_logic;
-			memif_mem2hwt_v_read    : out std_logic
+			memif_mem2hwt_v_read    : out std_logic;
+
+			debug_port_V_i 			: IN STD_LOGIC_VECTOR (31 downto 0);
+        	debug_port_V_o 			: OUT STD_LOGIC_VECTOR (31 downto 0);
+        	debug_port_V_o_ap_vld 	: OUT STD_LOGIC 
 		);
   	end component;
 
@@ -121,6 +127,9 @@ begin
 
 			memif_mem2hwt_v_dout    => memif_mem2hwt_v_dout,
 			memif_mem2hwt_v_empty_n => memif_mem2hwt_v_empty_n,
-			memif_mem2hwt_v_read    => memif_mem2hwt_v_read
+			memif_mem2hwt_v_read    => memif_mem2hwt_v_read,
+
+			debug_port_V_o => debug_port,
+			debug_port_V_i => (others=>'0')
 	);	
 end architecture;
