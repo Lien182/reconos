@@ -22,6 +22,7 @@ entity servo_v1_0 is
         servo_3 : out std_logic;
         servo_4 : out std_logic;
         servo_5 : out std_logic;
+		TC_WRITE_INT : OUT std_logic;
                                 
 		-- User ports ends
 		-- Do not modify the ports beyond this line
@@ -67,6 +68,7 @@ architecture arch_imp of servo_v1_0 is
         servo_3 : out std_logic;
         servo_4 : out std_logic;
         servo_5 : out std_logic;
+		TC_WRITE_INT : OUT std_logic;
 		S_AXI_ACLK	: in std_logic;
 		S_AXI_ARESETN	: in std_logic;
 		S_AXI_AWADDR	: in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
@@ -106,6 +108,7 @@ servo_v1_0_S00_AXI_inst : servo_v1_0_S00_AXI
         servo_3 => servo_3,
         servo_4 => servo_4,
         servo_5 => servo_5,
+		TC_WRITE_INT => TC_WRITE_INT,
 		S_AXI_ACLK	=> s00_axi_aclk,
 		S_AXI_ARESETN	=> s00_axi_aresetn,
 		S_AXI_AWADDR	=> s00_axi_awaddr,

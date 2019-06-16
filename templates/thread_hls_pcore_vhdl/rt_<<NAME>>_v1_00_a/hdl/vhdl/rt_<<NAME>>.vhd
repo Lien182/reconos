@@ -57,9 +57,8 @@ architecture implementation of rt_<<NAME>> is
 			memif_mem2hwt_v_empty_n : in std_logic;
 			memif_mem2hwt_v_read    : out std_logic;
 
-			debug_port_V_i 			: IN STD_LOGIC_VECTOR (31 downto 0);
-        	debug_port_V_o 			: OUT STD_LOGIC_VECTOR (31 downto 0);
-        	debug_port_V_o_ap_vld 	: OUT STD_LOGIC 
+			debug_port_i 			: IN STD_LOGIC_VECTOR (31 downto 0);
+        	debug_port_o 			: OUT STD_LOGIC_VECTOR (31 downto 0)
 		);
   	end component;
 
@@ -129,7 +128,7 @@ begin
 			memif_mem2hwt_v_empty_n => memif_mem2hwt_v_empty_n,
 			memif_mem2hwt_v_read    => memif_mem2hwt_v_read,
 
-			debug_port_V_o => debug_port,
-			debug_port_V_i => (others=>'0')
+			debug_port_o => debug_port,
+			debug_port_i => (others=>'0')
 	);	
 end architecture;

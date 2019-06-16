@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity servo_v1_0_S00_AXI is
+entity difference_measurement_timer_v1_0_S00_AXI is
 	generic (
 		-- Users to add parameters here
 
@@ -16,14 +16,10 @@ entity servo_v1_0_S00_AXI is
 	);
 	port (
 		-- Users to add ports here
-		servo_0 : out std_logic;
-    servo_1 : out std_logic;
-    servo_2 : out std_logic;
-    servo_3 : out std_logic;
-    servo_4 : out std_logic;
-    servo_5 : out std_logic;
-		TC_WRITE_INT : OUT std_logic;
-
+        Capture_0 : in std_logic;
+        Capture_1 : in std_logic;
+        Capture_2 : in std_logic;
+        Capture_3 : in std_logic;
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -88,9 +84,9 @@ entity servo_v1_0_S00_AXI is
     		-- accept the read data and response information.
 		S_AXI_RREADY	: in std_logic
 	);
-end servo_v1_0_S00_AXI;
+end difference_measurement_timer_v1_0_S00_AXI;
 
-architecture arch_imp of servo_v1_0_S00_AXI is
+architecture arch_imp of difference_measurement_timer_v1_0_S00_AXI is
 
 	-- AXI4LITE signals
 	signal axi_awaddr	: std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
@@ -127,24 +123,7 @@ architecture arch_imp of servo_v1_0_S00_AXI is
 	signal byte_index	: integer;
 	
 	
-	
-	-- User declarations
-		
-	constant C_SRV0_CAL : integer := 57334;
-    constant C_SRV1_CAL : integer := 63222;
-    constant C_SRV2_CAL : integer := 53375;
-    constant C_SRV3_CAL : integer := 64465;
-    constant C_SRV4_CAL : integer := 57482;
-    constant C_SRV5_CAL : integer := 66722;
-	
-	signal srv0_a, srv1_a, srv2_a, srv3_a, srv4_a, srv5_a : unsigned(10 downto 0);
-    signal srv0_c, srv1_c, srv2_c, srv3_c, srv4_c, srv5_c : unsigned(21 downto 0);
-    signal srv0_p, srv1_p, srv2_p, srv3_p, srv4_p, srv5_p : std_logic;
-	
-	signal srv_count : unsigned(21 downto 0) := (others => '0');
-	
-	
-	
+	signal timer_cnt : unsigned(31 downto 0);
 	
 
 begin
@@ -237,16 +216,9 @@ begin
 	variable loc_addr :std_logic_vector(OPT_MEM_ADDR_BITS downto 0); 
 	begin
 	  if rising_edge(S_AXI_ACLK) then 
-			TC_WRITE_INT <= '0';
 	    if S_AXI_ARESETN = '0' then
-	    
-	      slv_reg0 <= std_logic_vector(to_unsigned(900, 32));
-	      slv_reg1 <= std_logic_vector(to_unsigned(900, 32));
-	      slv_reg2 <= std_logic_vector(to_unsigned(900, 32));
-	      slv_reg3 <= std_logic_vector(to_unsigned(900, 32));
-	      slv_reg4 <= std_logic_vector(to_unsigned(900, 32));
-	      slv_reg5 <= std_logic_vector(to_unsigned(900, 32));
-	      
+	      slv_reg0 <= (others => '0');
+
 	    else
 	      loc_addr := axi_awaddr(ADDR_LSB + OPT_MEM_ADDR_BITS downto ADDR_LSB);
 	      if (slv_reg_wren = '1') then
@@ -257,56 +229,10 @@ begin
 	                -- Respective byte enables are asserted as per write strobes                   
 	                -- slave registor 0
 	                slv_reg0(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
-	              	TC_WRITE_INT <= '1';
-								end if;
-	            end loop;
-	          when b"001" =>
-	            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-	              if ( S_AXI_WSTRB(byte_index) = '1' ) then
-	                -- Respective byte enables are asserted as per write strobes                   
-	                -- slave registor 1
-	                slv_reg1(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
-	              end if;
-	            end loop;
-	          when b"010" =>
-	            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-	              if ( S_AXI_WSTRB(byte_index) = '1' ) then
-	                -- Respective byte enables are asserted as per write strobes                   
-	                -- slave registor 2
-	                slv_reg2(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
-	              end if;
-	            end loop;
-	          when b"011" =>
-	            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-	              if ( S_AXI_WSTRB(byte_index) = '1' ) then
-	                -- Respective byte enables are asserted as per write strobes                   
-	                -- slave registor 3
-	                slv_reg3(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
-	              end if;
-	            end loop;
-	          when b"100" =>
-	            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-	              if ( S_AXI_WSTRB(byte_index) = '1' ) then
-	                -- Respective byte enables are asserted as per write strobes                   
-	                -- slave registor 4
-	                slv_reg4(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
-	              end if;
-	            end loop;
-	          when b"101" =>
-	            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-	              if ( S_AXI_WSTRB(byte_index) = '1' ) then
-	                -- Respective byte enables are asserted as per write strobes                   
-	                -- slave registor 5
-	                slv_reg5(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
 	              end if;
 	            end loop;
 	          when others =>
-	            slv_reg0 <= slv_reg0;
-	            slv_reg1 <= slv_reg1;
-	            slv_reg2 <= slv_reg2;
-	            slv_reg3 <= slv_reg3;
-	            slv_reg4 <= slv_reg4;
-	            slv_reg5 <= slv_reg5;
+
 	        end case;
 	      end if;
 	    end if;
@@ -437,44 +363,47 @@ begin
 
 
 	-- Add user logic here
-    
- 		srv0_c <= unsigned(slv_reg0(10 downto 0)) * 100 + C_SRV0_CAL;
-    srv1_c <= unsigned(slv_reg1(10 downto 0)) * 100 + C_SRV1_CAL;
-    srv2_c <= unsigned(slv_reg2(10 downto 0)) * 100 + C_SRV2_CAL;
-    srv3_c <= unsigned(slv_reg3(10 downto 0)) * 100 + C_SRV3_CAL;
-    srv4_c <= unsigned(slv_reg4(10 downto 0)) * 100 + C_SRV4_CAL;
-    srv5_c <= unsigned(slv_reg5(10 downto 0)) * 100 + C_SRV5_CAL;
-
-    srv_proc: process(S_AXI_ACLK) is
-    begin
-        if rising_edge(S_AXI_ACLK) then
-            srv_count <= srv_count + 1;
-
-            if srv_count = 1000000 then
-                srv_count <= (others => '0');
+    process( S_AXI_ACLK ) is
+        begin
+          if (rising_edge (S_AXI_ACLK)) then
+            if ( S_AXI_ARESETN = '0' ) then
+              timer_cnt  <= (others => '0');
+              
+              
+              slv_reg1 <= (others => '0');
+              slv_reg2 <= (others => '0');
+              slv_reg3 <= (others => '0');
+              slv_reg4 <= (others => '0');
+              slv_reg5 <= (others => '0');
+              
+              
+            else
+              timer_cnt <= timer_cnt + 1;
             end if;
-        end if;
-    end process srv_proc;
-
-    srv0_p <= '1' when srv_count < srv0_c else '0';
-    srv1_p <= '1' when srv_count < srv1_c else '0';
-    srv2_p <= '1' when srv_count < srv2_c else '0';
-    srv3_p <= '1' when srv_count < srv3_c else '0';
-    srv4_p <= '1' when srv_count < srv4_c else '0';
-    srv5_p <= '1' when srv_count < srv5_c else '0';
-
-    srv_out_proc: process(S_AXI_ACLK) is
-    begin
-        if rising_edge(S_AXI_ACLK) then
-            servo_0 <= srv0_p;
-            servo_1 <= srv1_p;
-            servo_2 <= srv2_p;
-            servo_3 <= srv3_p;
-            servo_4 <= srv4_p;
-            servo_5 <= srv5_p;
-        end if;
-    end process srv_out_proc;
-
+            
+            if Capture_0 = '1' then
+                slv_reg2 <= std_logic_vector(timer_cnt);
+            end if;
+            
+            if Capture_1 = '1' then
+                slv_reg3 <= std_logic_vector(timer_cnt);
+            end if;
+            
+            if Capture_2 = '1' then
+                slv_reg4 <= std_logic_vector(timer_cnt);
+            end if;
+            
+            if Capture_3 = '1' then
+                slv_reg5 <= std_logic_vector(timer_cnt);
+            end if;
+            
+            slv_reg1 <= std_logic_vector(timer_cnt);
+            
+          end if;
+        end process;
+        
+        
+        
 	-- User logic ends
 
 end arch_imp;

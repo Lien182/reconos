@@ -21,6 +21,7 @@ entity touch_v1_0_S00_AXI is
         TC_MISO  : in  std_logic := '0';
         TC_SSn   : out std_logic;
         TC_IRQ   : in  std_logic := '0';
+				TC_READ_INT : OUT std_logic;
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -389,6 +390,7 @@ begin
 	process( S_AXI_ACLK ) is
 	begin
 	  if (rising_edge (S_AXI_ACLK)) then
+			TC_READ_INT <= '0';
 	    if ( S_AXI_ARESETN = '0' ) then
 	      axi_rdata  <= (others => '0');
 	    else
@@ -398,6 +400,7 @@ begin
 	        -- output the read dada 
 	        -- Read address mux
 	          axi_rdata <= reg_data_out;     -- register read data
+						TC_READ_INT <= '1';
 	      end if;   
 	    end if;
 	  end if;

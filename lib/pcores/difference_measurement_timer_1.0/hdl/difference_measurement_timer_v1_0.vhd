@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity touch_v1_0 is
+entity difference_measurement_timer_v1_0 is
 	generic (
 		-- Users to add parameters here
 
@@ -12,16 +12,14 @@ entity touch_v1_0 is
 
 		-- Parameters of Axi Slave Bus Interface S00_AXI
 		C_S00_AXI_DATA_WIDTH	: integer	:= 32;
-		C_S00_AXI_ADDR_WIDTH	: integer	:= 4
+		C_S00_AXI_ADDR_WIDTH	: integer	:= 5
 	);
 	port (
 		-- Users to add ports here
-        TC_SCLK  : out std_logic;
-        TC_MOSI  : out std_logic;
-        TC_MISO  : in  std_logic := '0';
-        TC_SSn   : out std_logic;
-        TC_IRQ   : in  std_logic := '0';
-		TC_READ_INT : OUT std_logic;
+        Capture_0 : in std_logic;
+        Capture_1 : in std_logic;
+        Capture_2 : in std_logic;
+        Capture_3 : in std_logic;
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -49,23 +47,21 @@ entity touch_v1_0 is
 		s00_axi_rvalid	: out std_logic;
 		s00_axi_rready	: in std_logic
 	);
-end touch_v1_0;
+end difference_measurement_timer_v1_0;
 
-architecture arch_imp of touch_v1_0 is
+architecture arch_imp of difference_measurement_timer_v1_0 is
 
 	-- component declaration
-	component touch_v1_0_S00_AXI is
+	component difference_measurement_timer_v1_0_S00_AXI is
 		generic (
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;
-		C_S_AXI_ADDR_WIDTH	: integer	:= 4
+		C_S_AXI_ADDR_WIDTH	: integer	:= 5
 		);
 		port (
-		TC_SCLK  : out std_logic;
-        TC_MOSI  : out std_logic;
-        TC_MISO  : in  std_logic := '0';
-        TC_SSn   : out std_logic;
-        TC_IRQ   : in  std_logic := '0';
-		TC_READ_INT : OUT std_logic;
+		Capture_0 : in std_logic;
+        Capture_1 : in std_logic;
+        Capture_2 : in std_logic;
+        Capture_3 : in std_logic;
 		S_AXI_ACLK	: in std_logic;
 		S_AXI_ARESETN	: in std_logic;
 		S_AXI_AWADDR	: in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
@@ -88,23 +84,21 @@ architecture arch_imp of touch_v1_0 is
 		S_AXI_RVALID	: out std_logic;
 		S_AXI_RREADY	: in std_logic
 		);
-	end component touch_v1_0_S00_AXI;
+	end component difference_measurement_timer_v1_0_S00_AXI;
 
 begin
 
 -- Instantiation of Axi Bus Interface S00_AXI
-touch_v1_0_S00_AXI_inst : touch_v1_0_S00_AXI
+difference_measurement_timer_v1_0_S00_AXI_inst : difference_measurement_timer_v1_0_S00_AXI
 	generic map (
 		C_S_AXI_DATA_WIDTH	=> C_S00_AXI_DATA_WIDTH,
 		C_S_AXI_ADDR_WIDTH	=> C_S00_AXI_ADDR_WIDTH
 	)
 	port map (
-	    TC_SCLK  => TC_SCLK,
-        TC_MOSI  => TC_MOSI,
-        TC_MISO  => TC_MISO,
-        TC_SSn   => TC_SSn,
-        TC_IRQ   => TC_IRQ,
-		TC_READ_INT => TC_READ_INT,
+	    Capture_0 => Capture_0,
+        Capture_1 => Capture_1,
+        Capture_2 => Capture_2,
+        Capture_3 => Capture_3,
 		S_AXI_ACLK	=> s00_axi_aclk,
 		S_AXI_ARESETN	=> s00_axi_aresetn,
 		S_AXI_AWADDR	=> s00_axi_awaddr,

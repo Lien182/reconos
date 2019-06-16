@@ -196,7 +196,7 @@ proc reconos_hw_setup {new_project_name new_project_path reconos_ip_dir} {
     create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_mem
     create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_hwt
     set_property -dict [ list CONFIG.NUM_MI {1}  ] [get_bd_cells axi_mem]
-    set_property -dict [ list CONFIG.NUM_MI {21}  ] [get_bd_cells axi_hwt]
+    set_property -dict [ list CONFIG.NUM_MI {23}  ] [get_bd_cells axi_hwt]
 
     # Add reconos stuff
     create_bd_cell -type ip -vlnv cs.upb.de:reconos:reconos_clock:1.0 reconos_clock_0
@@ -338,7 +338,8 @@ proc reconos_hw_setup {new_project_name new_project_path reconos_ip_dir} {
 
     #AXI TIMER
     create_bd_cell -type ip -vlnv xilinx.com:ip:axi_timer:2.0 axi_timer_0
-
+    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_timer:2.0 axi_timer_1
+    create_bd_cell -type ip -vlnv cs.upb.de:bop:difference_measurement_timer:1.0 difference_measurement_timer_0
 
 
     set IIC [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 IIC ]
@@ -1903,6 +1904,8 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     connect_bd_intf_net -intf_net axi_hwt_M19_AXI [get_bd_intf_pins axi_hwt/M19_AXI] [get_bd_intf_pins touch_2/S00_AXI]
     connect_bd_intf_net -intf_net axi_hwt_M19_AXI [get_bd_intf_pins axi_hwt/M19_AXI] [get_bd_intf_pins touch_2/S00_AXI]
     connect_bd_intf_net -intf_net axi_hwt_M20_AXI [get_bd_intf_pins axi_hwt/M20_AXI] [get_bd_intf_pins axi_timer_0/S_AXI]
+    connect_bd_intf_net -intf_net axi_hwt_M21_AXI [get_bd_intf_pins axi_hwt/M21_AXI] [get_bd_intf_pins axi_timer_1/S_AXI]
+    connect_bd_intf_net -intf_net axi_hwt_M22_AXI [get_bd_intf_pins axi_hwt/M22_AXI] [get_bd_intf_pins difference_measurement_timer_0/S00_AXI]
 
 
 
@@ -1958,6 +1961,8 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
                             [get_bd_pins axi_hwt/M18_ACLK] \
                             [get_bd_pins axi_hwt/M19_ACLK] \
                             [get_bd_pins axi_hwt/M20_ACLK] \
+                            [get_bd_pins axi_hwt/M21_ACLK] \
+                            [get_bd_pins axi_hwt/M22_ACLK] \
                             [get_bd_pins axi_hwt/S00_ACLK] \
                             [get_bd_pins axi_dmac_0/s_axi_aclk] \
                             [get_bd_pins axi_dmac_0/m_src_axi_aclk] \
@@ -1983,6 +1988,8 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
                             [get_bd_pins servo_2/s00_axi_aclk] \
                             [get_bd_pins touch_2/s00_axi_aclk] \
                             [get_bd_pins axi_timer_0/s_axi_aclk] \
+                            [get_bd_pins axi_timer_1/s_axi_aclk] \
+                            [get_bd_pins difference_measurement_timer_0/s00_axi_aclk] \
                             [get_bd_pins axi_clkgen_0/s_axi_aclk]\
                             [get_bd_pins axi_interconnect_0/ACLK] \
                             [get_bd_pins axi_interconnect_0/S00_ACLK] \
@@ -2020,6 +2027,8 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
                             [get_bd_pins axi_hwt/M18_ARESETN] \
                             [get_bd_pins axi_hwt/M19_ARESETN] \
                             [get_bd_pins axi_hwt/M20_ARESETN] \
+                            [get_bd_pins axi_hwt/M21_ARESETN] \
+                            [get_bd_pins axi_hwt/M22_ARESETN] \
                             [get_bd_pins axi_hwt/S00_ARESETN] \
                             [get_bd_pins axi_interconnect_0/M00_ARESETN] \
                             [get_bd_pins axi_interconnect_0/S00_ARESETN] \
@@ -2032,7 +2041,9 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
                             [get_bd_pins axi_clkgen_0/s_axi_aresetn] \
                             [get_bd_pins axi_dmac_rx/s_axi_aresetn] \
                             [get_bd_pins axi_dmac_0/s_axi_aresetn] \
-                            [get_bd_pins axi_timer_0/s_axi_aresetn]
+                            [get_bd_pins axi_timer_0/s_axi_aresetn] \
+                            [get_bd_pins axi_timer_1/s_axi_aresetn] \
+                            [get_bd_pins difference_measurement_timer_0/s00_axi_aresetn] 
                             
     # Proc_control resets
     connect_bd_net [get_bd_pins reconos_proc_control_0/PROC_Sys_Rst] [get_bd_pins reconos_memif_arbiter_0/SYS_Rst]
@@ -2059,20 +2070,24 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     connect_bd_net [get_bd_pins reconos_proc_control_0/PROC_Pgf_Int] [get_bd_pins xlconcat_0/In15]
 
 
+    connect_bd_net [get_bd_pins touch_0/TC_READ_INT] [get_bd_pins axi_timer_1/capturetrig0]
+    connect_bd_net [get_bd_pins servo_0/TC_WRITE_INT] [get_bd_pins axi_timer_1/capturetrig1]
+
+
+    create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1
+    set_property -dict [list CONFIG.DIN_TO {2} CONFIG.DIN_FROM {2} CONFIG.DIN_FROM {2} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_1]
+    connect_bd_net [get_bd_pins difference_measurement_timer_0/Capture_1] [get_bd_pins slot_0/HWT_MBREAD]
+    connect_bd_net [get_bd_pins xlslice_1/Din] [get_bd_pins slot_9/debug_port]
+    connect_bd_net [get_bd_pins xlslice_1/Dout] [get_bd_pins difference_measurement_timer_0/Capture_0]
+
+
+
     #
     # Memory Map of peripheperals
     #
 
     set_property -dict [list CONFIG.C_BASEADDR {0x6fe00000} CONFIG.C_HIGHADDR {0x6fe0ffff}] [get_bd_cells reconos_proc_control_0]
-    set_property -dict [list CONFIG.C_BASEADDR {0x75a00000} CONFIG.C_HIGHADDR {0x75a0ffff}] [get_bd_cells reconos_osif_0]
-    set_property -dict [list CONFIG.C_BASEADDR {0x64a00000} CONFIG.C_HIGHADDR {0x64a0ffff}] [get_bd_cells timer_0]
-    set_property -dict [list CONFIG.C_BASEADDR {0x43C00000} CONFIG.C_HIGHADDR {0x43C0ffff}] [get_bd_cells servo_0]
-    set_property -dict [list CONFIG.C_BASEADDR {0x43C10000} CONFIG.C_HIGHADDR {0x43C1ffff}] [get_bd_cells touch_0]
-    set_property -dict [list CONFIG.C_BASEADDR {0x43C70000} CONFIG.C_HIGHADDR {0x43C7ffff}] [get_bd_cells servo_1]
-    set_property -dict [list CONFIG.C_BASEADDR {0x43C30000} CONFIG.C_HIGHADDR {0x43C3ffff}] [get_bd_cells touch_1]
-    set_property -dict [list CONFIG.C_BASEADDR {0x43C60000} CONFIG.C_HIGHADDR {0x43C0ffff}] [get_bd_cells servo_2]
-    set_property -dict [list CONFIG.C_BASEADDR {0x43C50000} CONFIG.C_HIGHADDR {0x43C5ffff}] [get_bd_cells touch_2]
-    set_property -dict [list CONFIG.C_BASEADDR {0x42800000} CONFIG.C_HIGHADDR {0x4280ffff}] [get_bd_cells axi_timer_0]
+    set_property -dict [list CONFIG.C_BASEADDR {0x75a00000} CONFIG.C_HIGHADDR {0x75a0ffff}] [get_bd_cells reconos_osif_0]   
     set_property -dict [list CONFIG.C_BASEADDR {0x7b400000} CONFIG.C_HIGHADDR {0x7b40ffff}] [get_bd_cells reconos_osif_intc_0]
     set_property -dict [list CONFIG.C_BASEADDR {0x69e00000} CONFIG.C_HIGHADDR {0x69e0ffff}] [get_bd_cells reconos_clock_0]
     
@@ -2088,11 +2103,19 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     create_bd_addr_seg -range 64K -offset 0x43C60000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {servo_2/S00_AXI/S00_AXI_reg }] SEG11
     create_bd_addr_seg -range 64K -offset 0x43C50000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {touch_2/S00_AXI/S00_AXI_reg }] SEG12
     create_bd_addr_seg -range 64K -offset 0x42800000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {axi_timer_0/S_AXI/Reg }] SEG13
+    create_bd_addr_seg -range 64K -offset 0x42810000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {axi_timer_1/S_AXI/Reg }] SEG14
+    create_bd_addr_seg -range 64K -offset 0x43C80000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs {difference_measurement_timer_0/S00_AXI/S00_AXI_reg }] SEG15
 
     assign_bd_address [get_bd_addr_segs {processing_system7_0/S_AXI_ACP/ACP_DDR_LOWOCM }]
     assign_bd_address [get_bd_addr_segs {processing_system7_0/S_AXI_ACP/ACP_M_AXI_GP0 }]
 
     
+
+    connect_bd_net [get_bd_pins axi_timer_1/generateout0] \
+                            [get_bd_pins slot_3/HWT_Trig] \
+                            [get_bd_pins slot_4/HWT_Trig] \
+                            [get_bd_pins slot_5/HWT_Trig] 
+
                             
     # Update layout of block design
     regenerate_bd_layout

@@ -30,6 +30,8 @@ int DYNAMIC_REG_COUNT = 0;
 static __init int reconos_init(void) {
 	int ret;
 
+	__printk(KERN_WARNING "[reconos] initializing driver ...\n");
+
 	__printk(KERN_INFO "[reconos] initializing driver ...\n");
 
 	NUM_HWTS = proc_control_num_hwts_static();

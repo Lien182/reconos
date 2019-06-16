@@ -55,6 +55,6 @@
                                    hls::stream<uint32> osif_hw2sw,\
                                    hls::stream<uint32> memif_hwt2mem,\
                                    hls::stream<uint32> memif_mem2hwt,\
-                                   ap_uint<32> * debug_port )
+                                   volatile uint32* debug_port )
 
 #endif /* RECONOS_THREAD_H */
