@@ -31,6 +31,7 @@
 #include <pthread.h>
 #include <sched.h>
 #include <string.h>
+#include <sys/mman.h>
 
 int RECONOS_NUM_HWTS = 0;
 
@@ -110,6 +111,7 @@ void reconos_thread_init(struct reconos_thread *rt,
 
 	rt->bitstreams = NULL;
 	rt->bitstream_lengths = NULL;
+	rt->thread_priority = 0;
 }
 
 /*
@@ -277,7 +279,57 @@ void reconos_thread_create_auto(struct reconos_thread *rt, int tt) {
 
 		reconos_thread_create(rt, rt->allowed_hwslots[i]->id);
 	} else if (tt & RECONOS_THREAD_SW) {
-		pthread_create(&rt->swslot, 0, rt->swentry, (void*)rt);
+		if(rt->thread_priority != 0)
+	{
+		struct sched_param param;
+		pthread_attr_t attr;
+		int ret;
+
+		/* Lock memory */
+		if(mlockall(MCL_CURRENT|MCL_FUTURE) == -1) {
+				printf("mlockall failed: %m\n");
+				exit(-2);
+		}
+
+		/* Initialize pthread attributes (default values) */
+		ret = pthread_attr_init(&attr);
+		if (ret) {
+				printf("init pthread attributes failed\n");
+				return;
+		}
+
+		/* Set a specific stack size  */
+		//ret = pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
+		//if (ret) {
+		//	printf("pthread setstacksize failed\n");
+		//	goto out;
+		//}
+
+		/* Set scheduler policy and priority of pthread */
+		ret = pthread_attr_setschedpolicy(&attr, SCHED_FIFO);
+		if (ret) {
+				printf("pthread setschedpolicy failed\n");
+				return;
+		}
+		param.sched_priority = rt->thread_priority;
+		ret = pthread_attr_setschedparam(&attr, &param);
+		if (ret) {
+				printf("pthread setschedparam failed\n");
+				return;
+		}
+		/* Use scheduling parameters of attr */
+		ret = pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
+		if (ret) {
+				printf("pthread setinheritsched failed\n");
+				return;
+		}
+		
+		pthread_create(&rt->swslot, &attr, rt->swentry, (void*)rt);
+	}
+	else
+	{
+		pthread_create(&rt->swslot, NULL, rt->swentry, (void*)rt);
+	}
 	}
 }
 
@@ -343,6 +395,11 @@ void reconos_thread_join(struct reconos_thread *rt) {
  */
 void reconos_thread_signal(struct reconos_thread *rt) {
 	hwslot_setsignal(rt->hwslot, 1);
+}
+
+void reconos_thread_setpriority(struct reconos_thread * rt, int thread_priority)
+{
+	rt->thread_priority = thread_priority;
 }
 
 
@@ -508,7 +565,51 @@ void hwslot_createdelegate(struct hwslot *slot) {
 	slot->dt_state = DELEGATE_STATE_INIT;
 	slot->dt_flags = 0;
 
-	pthread_create(&slot->dt, NULL, dt_delegate, slot);
+	struct sched_param param;
+	pthread_attr_t attr;
+	int ret;
+
+	/* Lock memory */
+	if(mlockall(MCL_CURRENT|MCL_FUTURE) == -1) {
+			printf("mlockall failed: %m\n");
+			exit(-2);
+	}
+
+	/* Initialize pthread attributes (default values) */
+	ret = pthread_attr_init(&attr);
+	if (ret) {
+			printf("init pthread attributes failed\n");
+			return;
+	}
+
+	/* Set a specific stack size  */
+	//ret = pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
+	//if (ret) {
+	//	printf("pthread setstacksize failed\n");
+	//	goto out;
+	//}
+
+	/* Set scheduler policy and priority of pthread */
+	ret = pthread_attr_setschedpolicy(&attr, SCHED_FIFO);
+	if (ret) {
+			printf("pthread setschedpolicy failed\n");
+			return;
+	}
+	param.sched_priority = 80;
+	ret = pthread_attr_setschedparam(&attr, &param);
+	if (ret) {
+			printf("pthread setschedparam failed\n");
+			return;
+	}
+	/* Use scheduling parameters of attr */
+	ret = pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
+	if (ret) {
+			printf("pthread setinheritsched failed\n");
+			return;
+	}
+
+
+	pthread_create(&slot->dt, &attr, dt_delegate, slot);
 }
 
 /*
@@ -528,6 +629,7 @@ void hwslot_createthread(struct hwslot *slot,
 
 	reconos_osif_write(slot->osif, (uint32_t)OSIF_SIGNAL_THREAD_START);
 
+	rt->thread_priority = 80;
 	hwslot_createdelegate(slot);
 }
 

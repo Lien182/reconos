@@ -2081,6 +2081,16 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     connect_bd_net [get_bd_pins xlslice_1/Dout] [get_bd_pins difference_measurement_timer_0/Capture_0]
 
 
+    create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2   
+    set_property -dict [list CONFIG.DIN_TO {2} CONFIG.DIN_FROM {2} CONFIG.DIN_FROM {2} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_2]
+    connect_bd_net [get_bd_pins xlslice_2/Dout] [get_bd_pins difference_measurement_timer_0/Capture_2]
+
+    create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3
+    connect_bd_net [get_bd_pins xlslice_3/Dout] [get_bd_pins difference_measurement_timer_0/Capture_3]
+    set_property -dict [list CONFIG.DIN_TO {3} CONFIG.DIN_FROM {3} CONFIG.DIN_FROM {3} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_3]
+    
+    connect_bd_net [get_bd_pins xlslice_2/Din] [get_bd_pins slot_12/debug_port]
+    connect_bd_net [get_bd_pins xlslice_3/Din] [get_bd_pins slot_12/debug_port]
 
     #
     # Memory Map of peripheperals

@@ -89,7 +89,7 @@ struct reconos_thread *reconos_thread_create_hwt_<<Name>>(void * init_data);
  *
  *   rt   - pointer to the ReconOS thread
  */
-struct reconos_thread *reconos_thread_create_swt_<<Name>>(void * init_data);
+struct reconos_thread *reconos_thread_create_swt_<<Name>>(void * init_data, int priority);
 <<=end generate=>>
 
 /*
