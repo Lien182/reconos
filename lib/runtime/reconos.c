@@ -562,6 +562,7 @@ void hwslot_createdelegate(struct hwslot *slot) {
 		panic("[reconos-core] ERROR: delegate thread already running\n");
 	}
 
+	
 	slot->dt_state = DELEGATE_STATE_INIT;
 	slot->dt_flags = 0;
 
@@ -609,8 +610,10 @@ void hwslot_createdelegate(struct hwslot *slot) {
 	}
 
 
+
+	
 	pthread_create(&slot->dt, &attr, dt_delegate, slot);
-}
+}	
 
 /*
  * @see header
