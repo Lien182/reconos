@@ -47,8 +47,8 @@ pthread_mutex_t *<<NameLower>> = &<<NameLower>>_s;
 <<end generate>>
 
 <<generate for RESOURCES(Type == "cond")>>
-pthread_cond <<NameLower>>_s;
-pthread_cond *<<NameLower>> = &<<NameLower>>_s;
+pthread_cond_t <<NameLower>>_s;
+pthread_cond_t *<<NameLower>> = &<<NameLower>>_s;
 <<end generate>>
 
 <<generate for RESOURCES>>
@@ -99,7 +99,7 @@ void reconos_app_cleanup() {
 	<<end generate>>
 
 	<<generate for RESOURCES(Type == "cond")>>
-	pthread_cond_destroy(<<NameLower>>, NULL);
+	pthread_cond_destroy(<<NameLower>>);
 	<<end generate>>
 }
 

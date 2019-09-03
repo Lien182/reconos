@@ -1,0 +1,25 @@
+Command: open_checkpoint ./Implement/config_matrixmul/design_1_wrapper_route_design.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2387.195 ; gain = 0.000 ; free physical = 2060 ; free virtual = 8109
+INFO: [Netlist 29-17] Analyzing 538 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Parsing XDC File [/home/christian/reconos/reconos/demos/reconf_sort_matrixmul/.Xil/Vivado-25305-Lienen02/dcp/design_1_wrapper.xdc]
+Finished Parsing XDC File [/home/christian/reconos/reconos/demos/reconf_sort_matrixmul/.Xil/Vivado-25305-Lienen02/dcp/design_1_wrapper.xdc]
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:00.53 ; elapsed = 00:00:00.54 . Memory (MB): peak = 2387.195 ; gain = 0.000 ; free physical = 1910 ; free virtual = 7978
+Restored from archive | CPU: 0.540000 secs | Memory: 12.851074 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:00.53 ; elapsed = 00:00:00.54 . Memory (MB): peak = 2387.195 ; gain = 0.000 ; free physical = 1910 ; free virtual = 7978
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 123 instances were transformed.
+  RAM32M => RAM32M (RAMS32, RAMS32, RAMD32, RAMD32, RAMD32, RAMD32, RAMD32, RAMD32): 26 instances
+  RAM32X1D => RAM32X1D (RAMD32, RAMD32): 1 instances
+  RAM64M => RAM64M (RAMD64E, RAMD64E, RAMD64E, RAMD64E): 80 instances
+  RAM64X1D => RAM64X1D (RAMD64E, RAMD64E): 16 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2016.2 (64-bit) build 1577090

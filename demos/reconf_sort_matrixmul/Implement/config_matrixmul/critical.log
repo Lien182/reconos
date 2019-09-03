@@ -1,0 +1,72 @@
+	#HD: Parsing log file "./Implement/config_matrixmul/create_project.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/design_1_wrapper_link_design.log":
+	CRITICAL WARNING: [Project 1-486] Could not resolve non-primitive black box cell 'design_1_slot_0_0_bb' instantiated as 'design_1_i/slot_0' [/home/christian/reconos/reconos/demos/reconf_sort_matrixmul/build.hw/myReconOS.srcs/sources_1/bd/design_1/hdl/design_1.vhd:4199]
+	CRITICAL WARNING: [Project 1-486] Could not resolve non-primitive black box cell 'design_1_slot_1_0_bb' instantiated as 'design_1_i/slot_1' [/home/christian/reconos/reconos/demos/reconf_sort_matrixmul/build.hw/myReconOS.srcs/sources_1/bd/design_1/hdl/design_1.vhd:4218]
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/read_checkpoint_matrixmul_hwt0_slot_0.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/read_checkpoint_matrixmul_hwt1_slot_1.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/reports/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/reports/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/design_1_wrapper_opt_design.log":
+	CRITICAL WARNING: [Constraints 18-952] The ports 'DEBUG[6], DEBUG[67], DEBUG[34], DEBUG[84], DEBUG[25], DEBUG[39], DEBUG[11], DEBUG[33], DEBUG[100], DEBUG[44], DEBUG[52], DEBUG[74], DEBUG[17], DEBUG[27], DEBUG[58], DEBUG[89], DEBUG[37], DEBUG[23], DEBUG[104], DEBUG[26], DEBUG[90], DEBUG[56], DEBUG[97], DEBUG[35], DEBUG[54], DEBUG[8], DEBUG[107], DEBUG[36], DEBUG[91], DEBUG[96], DEBUG[77], DEBUG[7], DEBUG[20], DEBUG[18], DEBUG[41], DEBUG[19], DEBUG[53], DEBUG[81], DEBUG[87], DEBUG[64], DEBUG[78], DEBUG[31], DEBUG[70], DEBUG[40], DEBUG[47], DEBUG[102], DEBUG[92], DEBUG[60], DEBUG[50], DEBUG[15], DEBUG[59], DEBUG[72], DEBUG[32], DEBUG[22], DEBUG[85], DEBUG[69], DEBUG[94], DEBUG[86], DEBUG[57], DEBUG[88], DEBUG[68], DEBUG[42], DEBUG[2], DEBUG[4], DEBUG[66], DEBUG[48], DEBUG[99], DEBUG[63], DEBUG[14], DEBUG[55], DEBUG[110], DEBUG[108], DEBUG[61], DEBUG[83], DEBUG[45], DEBUG[73], DEBUG[62], DEBUG[5], DEBUG[98], DEBUG[29], DEBUG[93], DEBUG[49], DEBUG[38], DEBUG[103], DEBUG[106], DEBUG[3], DEBUG[95], DEBUG[71], DEBUG[16], DEBUG[46], DEBUG[43], DEBUG[109], DEBUG[30], DEBUG[24], DEBUG[75], DEBUG[13], DEBUG[101], DEBUG[65], DEBUG[105], DEBUG[82], DEBUG[51], DEBUG[21], DEBUG[9], DEBUG[76], DEBUG[10], DEBUG[28], DEBUG[12], DEBUG[1], DEBUG[0], DEBUG[79], and DEBUG[80]' in reconfigurable module 'design_1_i/slot_0' are not connected to upper-level during instantiation. Those ports should not be used by any configuration, otherwise, they may lead to drive-less logic. Resolution: remove those unnecessary ports from the reconfigurable module interface. 
+	CRITICAL WARNING: [Constraints 18-952] The ports 'DEBUG[15], DEBUG[16], DEBUG[13], DEBUG[57], DEBUG[84], DEBUG[53], DEBUG[107], DEBUG[68], DEBUG[52], DEBUG[49], DEBUG[89], DEBUG[95], DEBUG[72], DEBUG[87], DEBUG[61], DEBUG[36], DEBUG[83], DEBUG[10], DEBUG[12], DEBUG[99], DEBUG[4], DEBUG[9], DEBUG[29], DEBUG[19], DEBUG[90], DEBUG[43], DEBUG[28], DEBUG[78], DEBUG[60], DEBUG[56], DEBUG[37], DEBUG[71], DEBUG[94], DEBUG[20], DEBUG[77], DEBUG[100], DEBUG[106], DEBUG[47], DEBUG[41], DEBUG[102], DEBUG[33], DEBUG[96], DEBUG[93], DEBUG[45], DEBUG[98], DEBUG[31], DEBUG[11], DEBUG[34], DEBUG[32], DEBUG[103], DEBUG[88], DEBUG[101], DEBUG[35], DEBUG[92], DEBUG[74], DEBUG[27], DEBUG[76], DEBUG[25], DEBUG[48], DEBUG[6], DEBUG[44], DEBUG[110], DEBUG[75], DEBUG[85], DEBUG[23], DEBUG[105], DEBUG[104], DEBUG[8], DEBUG[40], DEBUG[58], DEBUG[39], DEBUG[18], DEBUG[5], DEBUG[64], DEBUG[51], DEBUG[14], DEBUG[63], DEBUG[21], DEBUG[42], DEBUG[65], DEBUG[108], DEBUG[22], DEBUG[67], DEBUG[91], DEBUG[70], DEBUG[50], DEBUG[82], DEBUG[109], DEBUG[17], DEBUG[81], DEBUG[55], DEBUG[26], DEBUG[62], DEBUG[86], DEBUG[59], DEBUG[66], DEBUG[80], DEBUG[69], DEBUG[54], DEBUG[7], DEBUG[97], DEBUG[0], DEBUG[73], DEBUG[79], DEBUG[38], DEBUG[24], DEBUG[3], DEBUG[1], DEBUG[46], DEBUG[30], and DEBUG[2]' in reconfigurable module 'design_1_i/slot_1' are not connected to upper-level during instantiation. Those ports should not be used by any configuration, otherwise, they may lead to drive-less logic. Resolution: remove those unnecessary ports from the reconfigurable module interface. 
+	CRITICAL WARNING: [Constraints 18-952] The ports 'DEBUG[6], DEBUG[67], DEBUG[34], DEBUG[84], DEBUG[25], DEBUG[39], DEBUG[11], DEBUG[33], DEBUG[100], DEBUG[44], DEBUG[52], DEBUG[74], DEBUG[17], DEBUG[27], DEBUG[58], DEBUG[89], DEBUG[37], DEBUG[23], DEBUG[104], DEBUG[26], DEBUG[90], DEBUG[56], DEBUG[97], DEBUG[35], DEBUG[54], DEBUG[8], DEBUG[107], DEBUG[36], DEBUG[91], DEBUG[96], DEBUG[77], DEBUG[7], DEBUG[20], DEBUG[18], DEBUG[41], DEBUG[19], DEBUG[53], DEBUG[81], DEBUG[87], DEBUG[64], DEBUG[78], DEBUG[31], DEBUG[70], DEBUG[40], DEBUG[47], DEBUG[102], DEBUG[92], DEBUG[60], DEBUG[50], DEBUG[15], DEBUG[59], DEBUG[72], DEBUG[32], DEBUG[22], DEBUG[85], DEBUG[69], DEBUG[94], DEBUG[86], DEBUG[57], DEBUG[88], DEBUG[68], DEBUG[42], DEBUG[2], DEBUG[4], DEBUG[66], DEBUG[48], DEBUG[99], DEBUG[63], DEBUG[14], DEBUG[55], DEBUG[110], DEBUG[108], DEBUG[61], DEBUG[83], DEBUG[45], DEBUG[73], DEBUG[62], DEBUG[5], DEBUG[98], DEBUG[29], DEBUG[93], DEBUG[49], DEBUG[38], DEBUG[103], DEBUG[106], DEBUG[3], DEBUG[95], DEBUG[71], DEBUG[16], DEBUG[46], DEBUG[43], DEBUG[109], DEBUG[30], DEBUG[24], DEBUG[75], DEBUG[13], DEBUG[101], DEBUG[65], DEBUG[105], DEBUG[82], DEBUG[51], DEBUG[21], DEBUG[9], DEBUG[76], DEBUG[10], DEBUG[28], DEBUG[12], DEBUG[1], DEBUG[0], DEBUG[79], and DEBUG[80]' in reconfigurable module 'design_1_i/slot_0' are not connected to upper-level during instantiation. Those ports should not be used by any configuration, otherwise, they may lead to drive-less logic. Resolution: remove those unnecessary ports from the reconfigurable module interface. 
+	CRITICAL WARNING: [Constraints 18-952] The ports 'DEBUG[15], DEBUG[16], DEBUG[13], DEBUG[57], DEBUG[84], DEBUG[53], DEBUG[107], DEBUG[68], DEBUG[52], DEBUG[49], DEBUG[89], DEBUG[95], DEBUG[72], DEBUG[87], DEBUG[61], DEBUG[36], DEBUG[83], DEBUG[10], DEBUG[12], DEBUG[99], DEBUG[4], DEBUG[9], DEBUG[29], DEBUG[19], DEBUG[90], DEBUG[43], DEBUG[28], DEBUG[78], DEBUG[60], DEBUG[56], DEBUG[37], DEBUG[71], DEBUG[94], DEBUG[20], DEBUG[77], DEBUG[100], DEBUG[106], DEBUG[47], DEBUG[41], DEBUG[102], DEBUG[33], DEBUG[96], DEBUG[93], DEBUG[45], DEBUG[98], DEBUG[31], DEBUG[11], DEBUG[34], DEBUG[32], DEBUG[103], DEBUG[88], DEBUG[101], DEBUG[35], DEBUG[92], DEBUG[74], DEBUG[27], DEBUG[76], DEBUG[25], DEBUG[48], DEBUG[6], DEBUG[44], DEBUG[110], DEBUG[75], DEBUG[85], DEBUG[23], DEBUG[105], DEBUG[104], DEBUG[8], DEBUG[40], DEBUG[58], DEBUG[39], DEBUG[18], DEBUG[5], DEBUG[64], DEBUG[51], DEBUG[14], DEBUG[63], DEBUG[21], DEBUG[42], DEBUG[65], DEBUG[108], DEBUG[22], DEBUG[67], DEBUG[91], DEBUG[70], DEBUG[50], DEBUG[82], DEBUG[109], DEBUG[17], DEBUG[81], DEBUG[55], DEBUG[26], DEBUG[62], DEBUG[86], DEBUG[59], DEBUG[66], DEBUG[80], DEBUG[69], DEBUG[54], DEBUG[7], DEBUG[97], DEBUG[0], DEBUG[73], DEBUG[79], DEBUG[38], DEBUG[24], DEBUG[3], DEBUG[1], DEBUG[46], DEBUG[30], and DEBUG[2]' in reconfigurable module 'design_1_i/slot_1' are not connected to upper-level during instantiation. Those ports should not be used by any configuration, otherwise, they may lead to drive-less logic. Resolution: remove those unnecessary ports from the reconfigurable module interface. 
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/design_1_wrapper_place_design.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/design_1_wrapper_phys_opt_design.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/design_1_wrapper_route_design.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/reports/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/reports/design_1_wrapper_design_status.rpt":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+
+	#HD: Parsing log file "./Implement/config_matrixmul/temp.log":
+
+

@@ -1,0 +1,111 @@
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 8 CPUs
+Checksum: PlaceDB: 454c5b32 ConstDB: 0 ShapeSum: 4d39ec96 RouteDB: 8d09086c
+
+Phase 1 Build RT Design
+Phase 1 Build RT Design | Checksum: 1fbc0193f
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:11 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2391 ; free virtual = 8433
+
+Phase 2 Router Initialization
+INFO: [Route 35-64] No timing constraints were detected. The router will operate in resource-optimization mode.
+
+Phase 2.1 Fix Topology Constraints
+Phase 2.1 Fix Topology Constraints | Checksum: 16bb21c14
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:12 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2390 ; free virtual = 8432
+
+Phase 2.2 Pre Route Cleanup
+Phase 2.2 Pre Route Cleanup | Checksum: 16bb21c14
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:12 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2390 ; free virtual = 8432
+ Number of Nodes with overlaps = 0
+Phase 2 Router Initialization | Checksum: 171f298a2
+
+Time (s): cpu = 00:00:16 ; elapsed = 00:00:12 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2386 ; free virtual = 8428
+
+Phase 3 Initial Routing
+Phase 3 Initial Routing | Checksum: 1ae91005e
+
+Time (s): cpu = 00:00:18 ; elapsed = 00:00:12 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2378 ; free virtual = 8420
+
+Phase 4 Rip-up And Reroute
+
+Phase 4.1 Global Iteration 0
+ Number of Nodes with overlaps = 257
+ Number of Nodes with overlaps = 0
+Phase 4.1 Global Iteration 0 | Checksum: 97dc34ba
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:13 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2377 ; free virtual = 8419
+Phase 4 Rip-up And Reroute | Checksum: 97dc34ba
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:13 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2376 ; free virtual = 8418
+
+Phase 5 Delay and Skew Optimization
+Phase 5 Delay and Skew Optimization | Checksum: 97dc34ba
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:13 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2376 ; free virtual = 8418
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+Phase 6.1 Hold Fix Iter | Checksum: 97dc34ba
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:13 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2376 ; free virtual = 8418
+Phase 6 Post Hold Fix | Checksum: 97dc34ba
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:13 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2376 ; free virtual = 8418
+
+Phase 7 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0.773273 %
+  Global Horizontal Routing Utilization  = 0.962221 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Congestion Report
+North Dir 1x1 Area, Max Cong = 47.7477%, No Congested Regions.
+South Dir 1x1 Area, Max Cong = 62.3656%, No Congested Regions.
+East Dir 1x1 Area, Max Cong = 55.8824%, No Congested Regions.
+West Dir 1x1 Area, Max Cong = 93.75%, Congestion bounded by tiles (Lower Left Tile -> Upper Right Tile):
+   INT_R_X53Y36 -> INT_R_X53Y36
+   INT_R_X53Y35 -> INT_R_X53Y35
+Phase 7 Route finalize | Checksum: 97dc34ba
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:13 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2376 ; free virtual = 8418
+
+Phase 8 Verifying routed nets
+
+ Verification completed successfully
+Phase 8 Verifying routed nets | Checksum: 97dc34ba
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:13 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2376 ; free virtual = 8418
+
+Phase 9 Depositing Routes
+Phase 9 Depositing Routes | Checksum: d3ac2f92
+
+Time (s): cpu = 00:00:23 ; elapsed = 00:00:13 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2356 ; free virtual = 8398
+INFO: [Route 35-16] Router Completed Successfully
+
+Time (s): cpu = 00:00:25 ; elapsed = 00:00:15 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2327 ; free virtual = 8369
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+971 Infos, 435 Warnings, 12 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:26 ; elapsed = 00:00:16 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2327 ; free virtual = 8369

@@ -2070,17 +2070,9 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     connect_bd_net [get_bd_pins reconos_proc_control_0/PROC_Pgf_Int] [get_bd_pins xlconcat_0/In15]
 
 
-    connect_bd_net [get_bd_pins touch_0/TC_READ_INT] [get_bd_pins axi_timer_1/capturetrig0]
-    connect_bd_net [get_bd_pins servo_0/TC_WRITE_INT] [get_bd_pins axi_timer_1/capturetrig1]
-
-
     create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1
     set_property -dict [list CONFIG.DIN_TO {2} CONFIG.DIN_FROM {2} CONFIG.DIN_FROM {2} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_1]
-    connect_bd_net [get_bd_pins difference_measurement_timer_0/Capture_1] [get_bd_pins slot_0/HWT_MBREAD]
-    connect_bd_net [get_bd_pins xlslice_1/Din] [get_bd_pins slot_9/debug_port]
-    connect_bd_net [get_bd_pins xlslice_1/Dout] [get_bd_pins difference_measurement_timer_0/Capture_0]
-
-
+    
     create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2   
     set_property -dict [list CONFIG.DIN_TO {2} CONFIG.DIN_FROM {2} CONFIG.DIN_FROM {2} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_2]
     connect_bd_net [get_bd_pins xlslice_2/Dout] [get_bd_pins difference_measurement_timer_0/Capture_2]
@@ -2089,8 +2081,8 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
     connect_bd_net [get_bd_pins xlslice_3/Dout] [get_bd_pins difference_measurement_timer_0/Capture_3]
     set_property -dict [list CONFIG.DIN_TO {3} CONFIG.DIN_FROM {3} CONFIG.DIN_FROM {3} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_3]
     
-    connect_bd_net [get_bd_pins xlslice_2/Din] [get_bd_pins slot_12/debug_port]
-    connect_bd_net [get_bd_pins xlslice_3/Din] [get_bd_pins slot_12/debug_port]
+    #connect_bd_net [get_bd_pins xlslice_2/Din] [get_bd_pins slot_12/debug_port]
+    #connect_bd_net [get_bd_pins xlslice_3/Din] [get_bd_pins slot_12/debug_port]
 
     #
     # Memory Map of peripheperals
@@ -2121,10 +2113,10 @@ connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins axi_dmac_0/m_src_axi] 
 
     
 
-    connect_bd_net [get_bd_pins axi_timer_1/generateout0] \
-                            [get_bd_pins slot_3/HWT_Trig] \
-                            [get_bd_pins slot_4/HWT_Trig] \
-                            [get_bd_pins slot_5/HWT_Trig] 
+   # connect_bd_net [get_bd_pins axi_timer_1/generateout0] \
+  #                          [get_bd_pins slot_3/HWT_Trig] \
+  #                          [get_bd_pins slot_4/HWT_Trig] \
+  #                          [get_bd_pins slot_5/HWT_Trig] 
 
                             
     # Update layout of block design

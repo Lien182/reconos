@@ -1,0 +1,21 @@
+Command: phys_opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.02 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2403 ; free virtual = 8441
+INFO: [Physopt 32-245] Routed nets are present in the design. phys_opt_design will optimize unrouted part of the design.
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 8 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Phase 1 Physical Synthesis Initialization | Checksum: b9277ac2
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:01 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2404 ; free virtual = 8442
+INFO: [Vivado_Tcl 4-235] No timing constraint found. The netlist was not modified.
+Ending Physical Synthesis Task | Checksum: 12c106610
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:01 . Memory (MB): peak = 2280.418 ; gain = 0.000 ; free physical = 2405 ; free virtual = 8442
+INFO: [Common 17-83] Releasing license: Implementation
+962 Infos, 435 Warnings, 12 Critical Warnings and 0 Errors encountered.
+phys_opt_design completed successfully

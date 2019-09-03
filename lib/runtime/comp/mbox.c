@@ -14,6 +14,9 @@
 int mbox_init(struct mbox *mb, size_t size)
 {
 	int ret;
+	pthread_mutexattr_t attr;
+	pthread_mutexattr_init(&attr);
+	pthread_mutexattr_setprotocol(&attr, PTHREAD_PRIO_INHERIT);
 
 	mb->read_idx = 0;
 	mb->write_idx = 0;
@@ -25,10 +28,10 @@ int mbox_init(struct mbox *mb, size_t size)
 	ret = sem_init(&mb->sem_write, 0, size);
 	if (ret)
 		goto out_err;
-	ret = pthread_mutex_init(&mb->mutex_read, NULL);
+	ret = pthread_mutex_init(&mb->mutex_read, &attr);
 	if (ret)
 		goto out_err;
-	ret = pthread_mutex_init(&mb->mutex_write, NULL);
+	ret = pthread_mutex_init(&mb->mutex_write, &attr);
 	if (ret)
 		goto out_err;
 
