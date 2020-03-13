@@ -80,6 +80,14 @@ void reconos_app_init() {
 	<<generate for RESOURCES(Type == "cond")>>
 	pthread_cond_init(<<NameLower>>, NULL);
 	<<end generate>>
+
+	<<generate for RESOURCES(Type == "rossubscriber")>>
+	ros_subscriber_init(<<NameLower>>, <<Args>>);
+	<<end generate>>
+
+	<<generate for RESOURCES(Type == "rospublisher")>>
+	ros_publisher_init(<<NameLower>>, <<Args>>);
+	<<end generate>>
 }
 
 /*
@@ -100,6 +108,14 @@ void reconos_app_cleanup() {
 
 	<<generate for RESOURCES(Type == "cond")>>
 	pthread_cond_destroy(<<NameLower>>);
+	<<end generate>>
+
+	<<generate for RESOURCES(Type == "rossubscriber")>>
+	ros_subscriber_destroy(<<NameLower>>, <<Args>>);
+	<<end generate>>
+
+	<<generate for RESOURCES(Type == "rospublisher")>>
+	ros_publisher_destroy(<<NameLower>>, <<Args>>);
 	<<end generate>>
 }
 
