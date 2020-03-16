@@ -46,7 +46,6 @@ extern int RECONOS_NUM_HWTS;
 #define RECONOS_RESOURCE_TYPE_ROSSUBSCRIBER 0x00000020
 #define RECONOS_RESOURCE_TYPE_ROSPUBLISHER	0x00000040
 
-
 /*
  * Object representing a single resource.
  *
@@ -141,7 +140,6 @@ struct reconos_thread {
 	int allowed_hwslot_count;
 	struct hwslot *hwslot;
 	pthread_t swslot;
-	int thread_priority;
 
 	char **bitstreams;
 	int *bitstream_lengths;
@@ -294,15 +292,6 @@ void reconos_thread_join(struct reconos_thread *rt);
  *   rt - pointer to the ReconOS thread
  */
 void reconos_thread_signal(struct reconos_thread *rt);
-
-/*
- * Sets the priority of the thread (for rt systems)
- * 
- *
- *   rt - pointer to the ReconOS thread
- * 	thread_priority - priority
- */
-void reconos_thread_setpriority(struct reconos_thread * rt, int thread_priority);
 
 /* == General functions ================================================ */
 
