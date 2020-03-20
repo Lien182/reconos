@@ -22,8 +22,7 @@ int ros_publisher_init(struct ros_publisher_t *ros_pub, struct ros_node_t * ros_
   
   rcl_ret_t rc = 0;
 
-  const rosidl_message_type_support_t * my_type_support =
-  ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String);
+  const rosidl_message_type_support_t * my_type_support = ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String);
 
   rcl_publisher_options_t pub_options = rcl_publisher_get_default_options();
   rc = rcl_publisher_init(
