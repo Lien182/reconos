@@ -26,13 +26,13 @@ def build(args):
 	prj = args.prj
 	swdir = prj.basedir + ".sw"
 
-	try:
-		shutil2.chdir(swdir)
-	except:
-		log.error("software directory '" + swdir + "' not found")
-		return
+	#try:
+	#	shutil2.chdir(swdir)
+	#except:
+	#	log.error("software directory '" + swdir + "' not found")
+	#	return
 	
-	subprocess.call("make", shell=True)
+	subprocess.call("bash $RECONOS/tools/arm-docker-build/build.sh", shell=True)
 
 	print()
 	shutil2.chdir(prj.dir)

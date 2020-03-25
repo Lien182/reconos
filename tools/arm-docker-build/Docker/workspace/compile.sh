@@ -1,6 +1,9 @@
 #!/bin/bash
 
-cd /mnt/workspace/tmp
+cd /mnt/project
+
+source /mnt/reconos/tools/settings.sh
+
 make clean
 make
 

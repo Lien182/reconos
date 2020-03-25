@@ -1,6 +1,9 @@
 # needed environment variables
 # (shold be set by the reconos toolchain)
 # CROSS_COMPILE
+
+# export CROSS_COMPILE=gcc-arm-linux-gnueabihf
+
 CC = $(CROSS_COMPILE)gcc
 AR = $(CROSS_COMPILE)ar
 
