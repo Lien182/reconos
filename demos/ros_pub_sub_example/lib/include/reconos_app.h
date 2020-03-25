@@ -19,15 +19,12 @@
  * ======================================================================
  */
 
-<<reconos_preproc>>
+
 
 #ifndef RECONOS_APP_H
 #define RECONOS_APP_H
 
 #include "mbox.h"
-#include "ros.h"
-#include "ros_pub.h"
-#include "ros_sub.h"
 
 #include <pthread.h>
 #include <semaphore.h>
@@ -42,25 +39,19 @@
  *   mutex - mutex (pthread_mutex)
  *   cond  - condition variable (pthread_cond)
  */
-<<generate for RESOURCES(Type == "mbox")>>
-extern struct mbox <<NameLower>>_s;
-extern struct mbox *<<NameLower>>;
-<<end generate>>
+extern struct mbox resources_address_s;
+extern struct mbox *resources_address;
 
-<<generate for RESOURCES(Type == "sem")>>
-extern sem_t <<NameLower>>_s;
-extern sem_t *<<NameLower>>;
-<<end generate>>
+extern struct mbox resources_acknowledge_s;
+extern struct mbox *resources_acknowledge;
 
-<<generate for RESOURCES(Type == "mutex")>>
-extern pthread_mutex_t <<NameLower>>_s;
-extern pthread_mutex_t *<<NameLower>>;
-<<end generate>>
 
-<<generate for RESOURCES(Type == "cond")>>
-extern pthread_cond_t <<NameLower>>_s;
-extern pthread_cond_t *<<NameLower>>;
-<<end generate>>
+
+
+
+
+
+
 
 
 /* == Application functions ============================================ */
@@ -75,42 +66,48 @@ void reconos_app_init();
  */
 void reconos_app_cleanup();
 
-<<generate for THREADS>>
-<<=generate for HasHw=>>
 /*
  * Creates a hardware thread in the specified slot with its associated
  * resources.
  *
  *   rt   - pointer to the ReconOS thread
  */
-struct reconos_thread *reconos_thread_create_hwt_<<Name>>(void * init_data);
-<<=end generate=>>
+struct reconos_thread *reconos_thread_create_hwt_sortdemo();
 
-<<=generate for HasSw=>>
+
 /*
  * Creates a software thread with its associated resources.
  *
  *   rt   - pointer to the ReconOS thread
  */
-struct reconos_thread *reconos_thread_create_swt_<<Name>>(void * init_data, int priority);
-<<=end generate=>>
+struct reconos_thread *reconos_thread_create_swt_sortdemo();
+
 
 /*
  * Destroyes a hardware thread created.
  *
  *   rt   - pointer to the ReconOS thread
  */
-void reconos_thread_destroy_<<Name>>(struct reconos_thread *rt);
-<<end generate>>
+void reconos_thread_destroy_sortdemo(struct reconos_thread *rt);
 
-<<generate for CLOCKS>>
+
+
 /*
  * Sets the frequency for the iven clock. Returns the actual clock which
  * were able to configure for the clock.
  *
  *   f - the wanted frequency in kHz
  */
-int reconos_clock_<<NameLower>>_set(int f);
-<<end generate>>
+int reconos_clock_system_set(int f);
+
+/*
+ * Sets the frequency for the iven clock. Returns the actual clock which
+ * were able to configure for the clock.
+ *
+ *   f - the wanted frequency in kHz
+ */
+int reconos_clock_threads_set(int f);
+
+
 
 #endif /* RECONOS_APP_H */
