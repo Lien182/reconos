@@ -53,17 +53,17 @@ pthread_cond_t *<<NameLower>> = &<<NameLower>>_s;
 
 <<generate for RESOURCES(Type == "rosnode")>>
 struct ros_node_t <<NameLower>>_s;
-struct ros_node_t *<<NameLower>>;
+struct ros_node_t *<<NameLower>> = &<<NameLower>>_s;
 <<end generate>>
 
 <<generate for RESOURCES(Type == "rossub")>>
 struct ros_subscriber_t <<NameLower>>_s;
-struct ros_subscriber_t *<<NameLower>>;
+struct ros_subscriber_t *<<NameLower>> = &<<NameLower>>_s;
 <<end generate>>
 
 <<generate for RESOURCES(Type == "rospub")>>
 struct ros_publisher_t <<NameLower>>_s;
-struct ros_publisher_t *<<NameLower>>;
+struct ros_publisher_t *<<NameLower>> = &<<NameLower>>_s;
 <<end generate>>
 
 <<generate for RESOURCES>>
