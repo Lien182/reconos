@@ -4,12 +4,12 @@
 
 # export CROSS_COMPILE=gcc-arm-linux-gnueabihf
 
-CC = $(CROSS_COMPILE)gcc
-AR = $(CROSS_COMPILE)ar
+CC = arm-linux-gnueabihf-gcc
+AR = arm-linux-gnueabihf-ar
 
 OBJS := timer.o
 
-CFLAGS = -O2 -g -Wall
+CFLAGS = -fPIC -O2 -g -Wall
 
 all: libtimer.a
 

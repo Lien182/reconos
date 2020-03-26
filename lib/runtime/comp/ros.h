@@ -14,6 +14,7 @@
  * Structure representing a ros node
  */
 struct ros_node_t {
+    uint32_t            node_nr;
     rcl_context_t       context;
     rcl_init_options_t  init_options;
     rcl_node_t          node;
