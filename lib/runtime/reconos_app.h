@@ -62,6 +62,20 @@ extern pthread_cond_t <<NameLower>>_s;
 extern pthread_cond_t *<<NameLower>>;
 <<end generate>>
 
+<<generate for RESOURCES(Type == "rosnode")>>
+extern struct ros_node_t <<NameLower>>_s;
+extern struct ros_node_t *<<NameLower>>;
+<<end generate>>
+
+<<generate for RESOURCES(Type == "rossub")>>
+extern struct ros_subscriber_t <<NameLower>>_s;
+extern struct ros_subscriber_t *<<NameLower>>;
+<<end generate>>
+
+<<generate for RESOURCES(Type == "rospub")>>
+extern struct ros_publisher_t <<NameLower>>_s;
+extern struct ros_publisher_t *<<NameLower>>;
+<<end generate>>
 
 /* == Application functions ============================================ */
 

@@ -104,14 +104,14 @@ int main(int argc, char **argv) {
 	log("creating %d hw-threads:", num_hwts);
 	for (i = 0; i < num_hwts; i++) {
 		log(" %d", i);
-		reconos_thread_create_hwt_sortdemo();
+		reconos_thread_create_hwt_sortdemo(0);
 	}
 	log("\n");
 
 	log("creating %d sw-thread:", num_swts);
 	for (i = 0; i < num_swts; i++) {
 		log(" %d", i);
-		reconos_thread_create_swt_sortdemo();
+		reconos_thread_create_swt_sortdemo(0,0);
 	}
 	log("\n");
 
