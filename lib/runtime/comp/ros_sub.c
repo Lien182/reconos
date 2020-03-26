@@ -84,7 +84,7 @@ int ros_subscriber_try_take(struct ros_subscriber_t *ros_sub, uint8_t * msg)
         }
         else
         {
-            printf("Return code : %d\n", rc);
+            debug("Return code : %d\n", rc);
             return 1;
         }        
     }
