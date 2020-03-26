@@ -69,7 +69,7 @@ int ros_subscriber_try_take(struct ros_subscriber_t *ros_sub, uint8_t * msg)
 {
     rcl_ret_t rc;
     rmw_message_info_t messageInfo;
-    rcl_allocator_t allocator = rcl_get_default_allocator();
+    //rcl_allocator_t allocator = rcl_get_default_allocator();
     
     //rmw_subscription_allocation_t allocator;
     //rmw_init_subscription_allocation(&allocator, ts, bounds);

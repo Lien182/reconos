@@ -23,6 +23,10 @@
 
 #include "mbox.h"
 
+#include "ros_pub.h"
+#include "ros_sub.h"
+
+#include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
 
@@ -173,5 +177,20 @@
  */
 #define THREAD_EXIT()\
 	pthread_exit(0);
+
+
+/*
+ * ROS functions
+ */
+
+#define ROS_PUBLISH(p_handle, src, len) \
+	ros_publisher_publish(p_handle, src, len);
+
+#define ROS_SUBSCRIBE_TRYGET(p_handle,dest) \
+	ros_subscriber_try_take(p_handle, dest);
+
+#define ROS_SUBSCRIBE_GET(p_handle, dest, wait_interval) \
+	while(ros_subscriber_try_take(p_handle, dest) != 0) usleep(wait_interval);
+
 
 #endif /* RECONOS_CALLS_H */

@@ -3,6 +3,7 @@
  */
 
 #include <stdio.h>
+#include <rosidl_generator_c/string_functions.h>
 #include <std_msgs/msg/string.h>
 #include <rosidl_generator_c/message_type_support_struct.h>
 
@@ -52,7 +53,7 @@ int ros_publisher_publish(struct ros_publisher_t *ros_pub, uint8_t * msg, uint32
   rcl_ret_t rc;
   
 
-  rosidl_generator_c__String__assignn(&pub_msg, msg, ros_pub->max_msg_size);
+  rosidl_generator_c__String__assignn(&pub_msg, (char*)msg, ros_pub->max_msg_size);
   rc = rcl_publish(&ros_pub->rcl_pub, &pub_msg, NULL);
   if (rc == RCL_RET_OK) {
     debug("Published message %s\n", pub_msg.data.data);
