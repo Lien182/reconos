@@ -101,11 +101,11 @@ void reconos_app_init() {
 	<<end generate>>
 
 	<<generate for RESOURCES(Type == "rossub")>>
-	ros_subscriber_init(<<NameLower>>, <<Args>>);
+	ros_subscriber_init(<<NameLower>>, resources_<<Args>>);
 	<<end generate>>
 
 	<<generate for RESOURCES(Type == "rospub")>>
-	ros_publisher_init(<<NameLower>>, <<Args>>);
+	ros_publisher_init(<<NameLower>>, resources_<<Args>>);
 	<<end generate>>
 }
 
