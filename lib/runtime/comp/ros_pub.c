@@ -13,7 +13,6 @@
 #include <errno.h>
 
 #include "ros_pub.h"
-#include "../utils.h"
 
 int ros_publisher_init(struct ros_publisher_t *ros_pub, struct ros_node_t * ros_node , char* topic_name, uint32_t max_msg_size)
 {

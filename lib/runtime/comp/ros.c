@@ -12,8 +12,6 @@
 #include <rcl/rcl.h>
 
 
-#include "../utils.h"
-
 static uint32_t node_nr = 0;
 
 
