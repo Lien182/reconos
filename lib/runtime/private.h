@@ -202,6 +202,12 @@ void hwslot_jointhread(struct hwslot *slot);
 
 #define OSIF_INTERRUPTED               0x000000FF
 
+#define OSIF_CMD_ROS_PUBLISH		   0x00000090
+#define OSIF_CMD_ROS_TAKE			   0x00000091
+#define OSIF_CMD_ROS_TRYTAKE		   0x00000092
+
+
+
 /*
  * Global method of the delegate thread
  *

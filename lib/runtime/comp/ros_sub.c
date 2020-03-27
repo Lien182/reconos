@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdint.h>
+#include <unistd.h>
 
 
 #include "ros_sub.h"
@@ -16,7 +17,7 @@
 
 #include "../utils.h"
 
-int ros_subscriber_init(struct ros_subscriber_t *ros_sub, struct ros_node_t * ros_node, char* topic, uint32_t max_msg_size)
+int ros_subscriber_init(struct ros_subscriber_t *ros_sub, struct ros_node_t * ros_node, char* topic, uint32_t max_msg_size, uint32_t wait_time)
 {
     rcl_ret_t rc;
     // create subscription
@@ -50,8 +51,7 @@ int ros_subscriber_init(struct ros_subscriber_t *ros_sub, struct ros_node_t * ro
     } 
 
     ros_sub->max_msg_size = max_msg_size;
-
-    //ros_sub->sub_msg = rcutils_get_zero_initialized_uint8_array();
+    ros_sub->wait_time = wait_time;
 
     
     return 0;
@@ -73,7 +73,7 @@ int ros_subscriber_destroy(struct ros_subscriber_t *ros_sub)
  *   mb  - pointer to the mbox
  *   msg - message to put into the mbox
  */
-int ros_subscriber_try_take(struct ros_subscriber_t *ros_sub, uint8_t * msg)
+int ros_subscriber_try_take(struct ros_subscriber_t *ros_sub, uint8_t ** msg, uint32_t * len)
 {
     rcl_ret_t rc;
     rmw_message_info_t messageInfo;
@@ -94,7 +94,17 @@ int ros_subscriber_try_take(struct ros_subscriber_t *ros_sub, uint8_t * msg)
         }        
     }
 
-    memcpy(msg, ros_sub->sub_msg.buffer, ros_sub->max_msg_size);
+    *msg = ros_sub->sub_msg.buffer;
+    *len = ros_sub->sub_msg.buffer_length;
+
+    return 0;
+}
+
+
+int ros_subscriber_take(struct ros_subscriber_t *ros_sub, uint8_t ** msg, uint32_t * len)
+{
+    while(ros_subscriber_try_take(ros_sub, msg, len) != 0)
+        usleep(ros_sub->wait_time);
 
     return 0;
 }

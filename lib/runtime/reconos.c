@@ -25,6 +25,9 @@
 #include "private.h"
 #include "arch/arch.h"
 #include "comp/mbox.h"
+#include "comp/ros.h"
+#include "comp/ros_pub.h"
+#include "comp/ros_sub.h"
 
 #include <unistd.h>
 #include <signal.h>
@@ -1072,6 +1075,73 @@ intr:
 	return -1;
 }
 
+static inline int dt_ros_publish(struct hwslot *slot) {
+	int handle, ret;
+	uint32_t addr, len;
+
+	handle = reconos_osif_read(slot->osif);
+	RESOURCE_CHECK_TYPE(handle, RECONOS_RESOURCE_TYPE_ROSPUB);
+
+	addr = reconos_osif_read(slot->osif);
+	len  = reconos_osif_read(slot->osif);
+
+	debug("[reconos-dt-%d] (ros publish on %d) ...\n", slot->id, handle);
+	SYSCALL_NONBLOCK(ret = ros_publisher_publish(handle, addr, len));
+	debug("[reconos-dt-%d] (ros publish on %d) done\n", slot->id, handle);
+
+	reconos_osif_write(slot->osif, (uint32_t)ret);
+
+	return 0;
+
+intr:
+	return -1;
+}
+
+static inline int dt_ros_take(struct hwslot *slot) {
+	int handle, ret;
+	uint32_t addr, len;
+
+	handle = reconos_osif_read(slot->osif);
+	RESOURCE_CHECK_TYPE(handle, RECONOS_RESOURCE_TYPE_ROSSUB);
+
+
+	debug("[reconos-dt-%d] (ros_take on %d) ...\n", slot->id, handle);
+	SYSCALL_NONBLOCK(while(ros_subscriber_try_take(slot->rt->resources[handle].ptr, &addr, &len) != 0) sleep(10000););
+	debug("[reconos-dt-%d] (ros_take on %d) done\n", slot->id, handle);
+
+	reconos_osif_write(slot->osif, (uint32_t)addr);
+	reconos_osif_write(slot->osif, (uint32_t)len);
+	
+
+	return 0;
+
+intr:
+	return -1;
+}
+
+static inline int dt_ros_trytake(struct hwslot *slot) {
+	int handle, ret;
+	uint32_t addr, len;
+
+	handle = reconos_osif_read(slot->osif);
+	RESOURCE_CHECK_TYPE(handle, RECONOS_RESOURCE_TYPE_ROSSUB);
+
+
+	debug("[reconos-dt-%d] (ros_trytake on %d) ...\n", slot->id, handle);
+	SYSCALL_NONBLOCK(ret = ros_subscriber_try_take(slot->rt->resources[handle].ptr, &addr, &len));
+	debug("[reconos-dt-%d] (ros_trytake on %d) done\n", slot->id, handle);
+
+	reconos_osif_write(slot->osif, (uint32_t)ret);
+	reconos_osif_write(slot->osif, (uint32_t)addr);
+	reconos_osif_write(slot->osif, (uint32_t)len);
+	
+
+	return 0;
+
+intr:
+	return -1;
+}
+
 /*
  * @see header
  */
@@ -1142,6 +1212,18 @@ void *dt_delegate(void *arg) {
 
 			case OSIF_CMD_COND_WAIT:
 				dt_cond_wait(slot);
+				break;
+
+			case OSIF_CMD_ROS_PUBLISH:
+				dt_ros_publish(slot);
+				break;
+
+			case OSIF_CMD_ROS_TAKE:
+				dt_ros_take(slot);
+				break;
+
+			case OSIF_CMD_ROS_TRYTAKE:
+				dt_ros_trytake(slot);
 				break;
 
 			case OSIF_CMD_THREAD_GET_INIT_DATA:

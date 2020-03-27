@@ -186,11 +186,11 @@
 #define ROS_PUBLISH(p_handle, src, len) \
 	ros_publisher_publish(p_handle, src, len);
 
-#define ROS_SUBSCRIBE_TRYGET(p_handle,dest) \
-	ros_subscriber_try_take(p_handle, dest);
+#define ROS_SUBSCRIBE_TRYTAKE(p_handle,dest) \
+	ros_subscriber_try_take(p_handle, &dest, &len);
 
-#define ROS_SUBSCRIBE_GET(p_handle, dest, wait_interval) \
-	while(ros_subscriber_try_take(p_handle, dest) != 0) usleep(wait_interval);
+#define ROS_SUBSCRIBE_TAKE(p_handle, dest, len ) \
+	ros_subscriber_take(p_handle, &dest, &len);
 
 
 #endif /* RECONOS_CALLS_H */

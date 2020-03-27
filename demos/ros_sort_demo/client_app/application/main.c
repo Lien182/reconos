@@ -104,13 +104,13 @@ void* node_thread(void * arg)
 	}
 	else if(sett->mode == MODE_SUBSCRIBER)
 	{
-		ros_subscriber_init(&resources_subdata[sett->cnt], &resources_rosnode[sett->cnt], sett->topic, sett->msg_length);
+		ros_subscriber_init(&resources_subdata[sett->cnt], &resources_rosnode[sett->cnt], sett->topic, sett->msg_length, 100000);
 
 		usleep(200000);	
 
 		for(i = 0; i < ITERATIONS; i++ )
 		{
-			while(ros_subscriber_try_take(&resources_subdata[sett->cnt], (uint8_t*)sett->msg) != 0) usleep(100000);
+			ros_subscriber_take(&resources_subdata[sett->cnt], &sett->msg, &sett->msg_length);
 			usleep(sett->wait_time);
 		}
 
