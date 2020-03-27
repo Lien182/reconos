@@ -51,8 +51,6 @@ extern int ros_subscriber_destroy(struct ros_subscriber_t *ros_sub);
  */
 extern int ros_subscriber_take(struct ros_subscriber_t *ros_sub, uint8_t ** msg, uint32_t * len);
 
-
-
 /*
  * Try to receive a message from the given topic.
  *
