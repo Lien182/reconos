@@ -3,6 +3,8 @@
 
 #define BLOCK_SIZE 2048
 
+uint32_t sort_data[BLOCK_SIZE * 4];
+
 void bubblesort(uint32_t *data, int data_count) {
 	int i;
 	uint32_t tmp;
@@ -32,13 +34,16 @@ void *rt_sortdemo(void *data) {
 	uint32_t ret;
 
 	while (1) {
-		ret = MBOX_GET(resources_address);
+		MBOX_TRYGET(resources_address, ret);
 
 		if (ret == 0xffffffff) {
 			THREAD_EXIT();
 		}
-
-		bubblesort((uint32_t *)ret, BLOCK_SIZE);
-		MBOX_PUT(resources_acknowledge, ret);
+		printf("Wait for new data! \n");
+		ROS_SUBSCRIBE_GET(resources_subdata, (uint8_t*)sort_data, 100000);
+		printf("Received new data! \n");
+		bubblesort(sort_data, BLOCK_SIZE);
+		printf("Publish new data! \n");
+		ROS_PUBLISH(resources_pubdata, (uint8_t*)sort_data, BLOCK_SIZE * 4  );
 	}
 }

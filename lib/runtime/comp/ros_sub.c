@@ -14,6 +14,7 @@
 #include "ros_sub.h"
 #include "rmw/types.h"
 
+#include "../utils.h"
 
 int ros_subscriber_init(struct ros_subscriber_t *ros_sub, struct ros_node_t * ros_node, char* topic, uint32_t max_msg_size)
 {
@@ -24,10 +25,13 @@ int ros_subscriber_init(struct ros_subscriber_t *ros_sub, struct ros_node_t * ro
 
     const rosidl_message_type_support_t * my_type_support =
     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String);
-    std_msgs__msg__String__init(&ros_sub->sub_msg);
 
-    my_subscription_options.qos.depth = 10;
-
+    rc = rcutils_uint8_array_init(&ros_sub->sub_msg,max_msg_size, &ros_node->allocator );
+    if (RCUTILS_RET_OK != rc)
+    {
+        printf("[ROS Subscriber] Error msg array init %d\n", rc);
+        return -1;
+    }
 
     rc = rcl_subscription_init(
         &ros_sub->sub,
@@ -37,14 +41,19 @@ int ros_subscriber_init(struct ros_subscriber_t *ros_sub, struct ros_node_t * ro
         &my_subscription_options);  
 
     if (rc != RCL_RET_OK) {
-        debug("Failed to create subscriber %s.\n", topic);
-        return -1;
+        panic("[ROS Subscriber] Failed to create subscriber: %s\n", topic);
+        return -2;
     } 
     else 
     {
-        debug("Created subscriber %s:\n", topic);
+        debug("[ROS Subscriber] Created subscriber: %s\n", topic);
     } 
 
+    ros_sub->max_msg_size = max_msg_size;
+
+    //ros_sub->sub_msg = rcutils_get_zero_initialized_uint8_array();
+
+    
     return 0;
 }
 
@@ -68,25 +77,24 @@ int ros_subscriber_try_take(struct ros_subscriber_t *ros_sub, uint8_t * msg)
 {
     rcl_ret_t rc;
     rmw_message_info_t messageInfo;
-    //rcl_allocator_t allocator = rcl_get_default_allocator();
     
-    //rmw_subscription_allocation_t allocator;
-    //rmw_init_subscription_allocation(&allocator, ts, bounds);
-
-    rc = rcl_take(&ros_sub->sub, &ros_sub->sub_msg, &messageInfo, NULL);
+    rc = rcl_take_serialized_message(&ros_sub->sub, &ros_sub->sub_msg,  &messageInfo, NULL);
+    
     if(rc != RCL_RET_OK)
     {
         if(rc != RCL_RET_SUBSCRIPTION_TAKE_FAILED)
         {
-            debug("Error number: %d\n", rc);
+            debug("[ROS Subscriber] Error number: %d\n", rc);
             return -1;
         }
         else
         {
-            debug("Return code : %d\n", rc);
+            debug("[ROS Subscriber] Return code : %d\n", rc);
             return 1;
         }        
     }
-    memcpy(msg, ros_sub->sub_msg.data.data, ros_sub->sub_msg.data.size);
+
+    memcpy(msg, ros_sub->sub_msg.buffer, ros_sub->max_msg_size);
+
     return 0;
 }

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define BLOCK_SIZE 2048
 
@@ -75,11 +76,15 @@ void merge(uint32_t *data, int data_count) {
 int main(int argc, char **argv) {
 	int i;
 	int num_hwts, num_swts, num_blocks;
+	int clk;
+#if 0
 	uint32_t *data, *copy;
 	int data_count;
-	int clk;
+
+
 
 	unsigned int t_start, t_gen, t_sort, t_merge, t_check;
+#endif
 
 	if (argc != 4) {
 		print_help();
@@ -96,12 +101,14 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
+	printf("Start init \n");
+
 	reconos_init();
 	reconos_app_init();
 
 	clk = reconos_clock_threads_set(100000);
 
-	log("creating %d hw-threads:", num_hwts);
+	log("creating %d hw-threads(clk = %d):", num_hwts,clk);
 	for (i = 0; i < num_hwts; i++) {
 		log(" %d", i);
 		reconos_thread_create_hwt_sortdemo(0);
@@ -113,6 +120,8 @@ int main(int argc, char **argv) {
 		log(" %d", i);
 		reconos_thread_create_swt_sortdemo(0,0);
 	}
+
+#if 0	
 	log("\n");
 
 	log("generating data ...\n");
@@ -158,6 +167,10 @@ int main(int argc, char **argv) {
 			log("expected 0x%08x but found 0x%08x at %d\n", copy[i], data[i], i);
 		}
 	}
+
+#endif
+
+	while(1) sleep(1);
 
 #if 0
 	// do we really want to terminate?

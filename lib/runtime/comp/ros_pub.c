@@ -14,6 +14,8 @@
 
 #include "ros_pub.h"
 
+#include "../utils.h"
+
 int ros_publisher_init(struct ros_publisher_t *ros_pub, struct ros_node_t * ros_node , char* topic_name, uint32_t max_msg_size)
 {
   rcl_node_t* node = &ros_node->node;
@@ -33,7 +35,7 @@ int ros_publisher_init(struct ros_publisher_t *ros_pub, struct ros_node_t * ros_
       &pub_options);
   
   if (RCL_RET_OK != rc) {
-    printf("Error in rcl_publisher_init %s.\n", topic_name);
+    panic("[ROS Publisher] Error in rcl_publisher_init %s\n", topic_name);
     return -1;
   }
 
@@ -50,14 +52,22 @@ std_msgs__msg__String pub_msg;
 int ros_publisher_publish(struct ros_publisher_t *ros_pub, uint8_t * msg, uint32_t msg_size)
 {
   rcl_ret_t rc;
+
+  rcl_serialized_message_t seri_msg;
+
+  seri_msg.buffer = msg;
+  seri_msg.buffer_length = msg_size;
+  seri_msg.buffer_capacity = ros_pub->max_msg_size;
+  seri_msg.allocator = rcl_get_default_allocator();
   
 
-  rosidl_generator_c__String__assignn(&pub_msg, (char*)msg, ros_pub->max_msg_size);
-  rc = rcl_publish(&ros_pub->rcl_pub, &pub_msg, NULL);
+  //rosidl_generator_c__String__assignn(&pub_msg, (char*)msg, ros_pub->max_msg_size);
+  //rc = rcl_publish(&ros_pub->rcl_pub, &pub_msg, NULL);
+  rc = rcl_publish_serialized_message(&ros_pub->rcl_pub, &seri_msg, NULL);
   if (rc == RCL_RET_OK) {
-    debug("Published message %s\n", pub_msg.data.data);
+    debug("[ROS Publisher] Published message!\n");
   } else {
-    debug("Error publishing message %s\n", pub_msg.data.data);
+    debug("[ROS Publisher] Error publishing message!\n");
   }
   return 0;
 }

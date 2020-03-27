@@ -16,10 +16,10 @@
  * Structure representing a mbox
  */
 struct ros_subscriber_t {
-    rcl_node_t*             node;
-    rcl_subscription_t      sub;
-    uint32_t                max_msg_size;
-    std_msgs__msg__String   sub_msg;
+    rcl_node_t*                 node;
+    rcl_subscription_t          sub;
+    uint32_t                    max_msg_size;
+    rcl_serialized_message_t    sub_msg;
 };
 
 /*
