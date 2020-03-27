@@ -67,6 +67,10 @@
 
 #define OSIF_INTERRUPTED               0x000000FF
 
+#define OSIF_CMD_ROS_PUBLISH		   0x00000090
+#define OSIF_CMD_ROS_TAKE			   0x00000091
+#define OSIF_CMD_ROS_TRYTAKE		   0x00000092
+
 /*
  * Definition of memif commands
  *
@@ -250,6 +254,43 @@ inline uint32 stream_read(hls::stream<uint32> &stream) {
 	stream_write(osif_hw2sw, p_handle),\
 	stream_write(osif_hw2sw, data),\
 	stream_read(osif_sw2hw))
+
+
+
+
+
+#define ROS_PUBLISH(p_handle,addr,len)(\
+	stream_write(osif_hw2sw, OSIF_CMD_ROS_PUBLISH),\
+	stream_write(osif_hw2sw, p_handle),\
+	stream_write(osif_hw2sw, addr),\
+	stream_write(osif_hw2sw, len),\
+	stream_read(osif_sw2hw))
+
+/*
+ * Tries to put a single word into the mbox specified by handle but does not
+ * blocks until the mbox gets populated.
+ *
+ *   @see mbox_tryget
+ */
+#define ROS_SUBSCRIBE_TRYTAKE(p_handle,dest, len)(\
+	stream_write(osif_hw2sw, OSIF_CMD_ROS_TRYTAKE),\
+	stream_write(osif_hw2sw, p_handle),\
+	dest = stream_read(osif_sw2hw),\
+	len = stream_read(osif_sw2hw),\
+	stream_read(osif_sw2hw))
+
+/*
+ * Tries to read a single word from the mbox specified by handle but does not
+ * blocks until the mbox gets free.
+ *
+ *   @see mbox_tryput
+ */
+#define ROS_SUBSCRIBE_TAKE(p_handle, dest, len )(\
+	stream_write(osif_hw2sw, OSIF_CMD_ROS_TAKE),\
+	stream_write(osif_hw2sw, p_handle),\
+	dest = stream_read(osif_sw2hw),\
+	len = stream_read(osif_sw2hw))
+
 
 /*
  * Gets the pointer to the initialization data of the ReconOS thread

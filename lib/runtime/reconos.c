@@ -1131,9 +1131,10 @@ static inline int dt_ros_trytake(struct hwslot *slot) {
 	SYSCALL_NONBLOCK(ret = ros_subscriber_try_take(slot->rt->resources[handle].ptr, &addr, &len));
 	debug("[reconos-dt-%d] (ros_trytake on %d) done\n", slot->id, handle);
 
-	reconos_osif_write(slot->osif, (uint32_t)ret);
+	
 	reconos_osif_write(slot->osif, (uint32_t)addr);
 	reconos_osif_write(slot->osif, (uint32_t)len);
+	reconos_osif_write(slot->osif, (uint32_t)ret);
 	
 
 	return 0;

@@ -54,7 +54,6 @@
 #define THREAD_ENTRY() void rt_imp(hls::stream<uint32> osif_sw2hw,\
                                    hls::stream<uint32> osif_hw2sw,\
                                    hls::stream<uint32> memif_hwt2mem,\
-                                   hls::stream<uint32> memif_mem2hwt,\
-                                   volatile uint32* debug_port )
+                                   hls::stream<uint32> memif_mem2hwt)
 
 #endif /* RECONOS_THREAD_H */

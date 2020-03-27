@@ -37,16 +37,17 @@ void sort_net(uint32 ram[BLOCK_SIZE]) {
 
 THREAD_ENTRY() {
 	RAM(uint32, BLOCK_SIZE, ram);
-
+	uint32 addr, len;
 	THREAD_INIT();
 
 	while(1) {
-		uint32 addr = MBOX_GET(resources_address);
+		ROS_SUBSCRIBE_TAKE(resources_subdata, addr, len );
 		MEM_READ(addr, ram, BLOCK_SIZE * 4);
 
 		sort_bubble(ram);
 
 		MEM_WRITE(ram, addr, BLOCK_SIZE * 4);
-		MBOX_PUT(resources_acknowledge, addr);
+
+		ROS_PUBLISH(resources_pubdata,addr,len);
 	}
 }
