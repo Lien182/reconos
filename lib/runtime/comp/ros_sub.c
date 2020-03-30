@@ -89,7 +89,7 @@ int ros_subscriber_try_take(struct ros_subscriber_t *ros_sub, uint8_t ** msg, ui
         }
         else
         {
-            debug("[ROS Subscriber] Return code : %d\n", rc);
+            //debug("[ROS Subscriber] Return code : %d\n", rc);
             return 1;
         }        
     }

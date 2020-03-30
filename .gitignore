@@ -66,6 +66,7 @@ modules.builtin
 demos/*/*.hw*/
 demos/*/*.sw*/
 demos/*/*/*.sw*/
+demos/*/*/*.hw*/
 demos/*/*/_build
 demos/*/*/client_app
 demos/*/*.sim*/

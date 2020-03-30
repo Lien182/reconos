@@ -7,13 +7,15 @@
 
 #define debug(...)
 
+#define SHOW_DATA 1
+
 #include "../lib/comp/ros.h"
 #include "../lib/comp/ros_sub.h"
 #include "../lib/comp/ros_pub.h"
 
 
 #define BLOCK_SIZE 	2048
-#define ITERATIONS	1
+#define ITERATIONS	10
 
 #define MODE_PUBLISHER	1
 #define MODE_SUBSCRIBER	2
@@ -45,20 +47,51 @@ void my_handler (int sig)
 
 int check_data(uint32_t * data, uint32_t length)
 {
-	/*
-	for(int i = 0; i < length; i++)
+
+#ifdef SHOW_DATA	
+	for(int i = 0; i < 10; i+=1)
 	{
 		printf("%x ", data[i]);
 		if(i % 50 == (50-1)) printf("\n");
 	}
-	*/
+#endif	
 	for(int i = 0; i < length-1; i++)
 	{
 		if(data[i+1] < data[i])
+		{
+			printf("unsorted at i=%d \n",i);
 			return -1;
+		}
 	}
 
 	return 0;
+}
+
+void clear_data(uint32_t * data, uint32_t length)
+{
+	for(int i = 0; i < length; i++)
+	{
+		data[i] = 0;
+	}
+}
+
+void random_data(uint32_t * data, uint32_t length)
+{
+	for(int i = 0; i < length; i++)
+	{
+		data[i] = rand();
+	}	
+}
+
+uint32_t xor_hash(uint32_t * data, uint32_t length)
+{
+	uint32_t ret = 0;
+	for(int i = 0; i < length; i++)
+	{
+		ret ^= data[i];
+	}
+
+	return ret;
 }
 
 
@@ -87,14 +120,12 @@ void* node_thread(void * arg)
 		}
 		usleep(200000);	
 
-		if(check_data((uint32_t*)sett->msg, BLOCK_SIZE) != 0)
-			printf("[ReconROS_Node_%d] Data is unsorted! \n", sett->cnt);
-		else
-			printf("[ReconROS_Node_%d] Data is sorted \n", sett->cnt);
-		
-
 		for(i = 0; i < ITERATIONS; i++ )
 		{
+			random_data((uint32_t*)sett->msg, BLOCK_SIZE);
+			printf("[ReconROS_Node_%d] Hash %x \n", sett->cnt, xor_hash((uint32_t*)sett->msg, BLOCK_SIZE));
+			printf("[ReconROS_Node_%d]", sett->cnt);
+			check_data((uint32_t*)sett->msg, BLOCK_SIZE);
 			ros_publisher_publish(&resources_pubdata[sett->cnt], (uint8_t*)sett->msg, sett->msg_length);
 			usleep(sett->wait_time);
 		}
@@ -110,16 +141,24 @@ void* node_thread(void * arg)
 
 		for(i = 0; i < ITERATIONS; i++ )
 		{
+			
 			ros_subscriber_take(&resources_subdata[sett->cnt], &sett->msg, &sett->msg_length);
 			usleep(sett->wait_time);
+
+			printf("[ReconROS_Node_%d] Hash %x \n", sett->cnt, xor_hash((uint32_t*)sett->msg, BLOCK_SIZE));
+
+			printf("[ReconROS_Node_%d]", sett->cnt);
+			if(check_data((uint32_t*)sett->msg, BLOCK_SIZE) != 0)
+				printf("[ReconROS_Node_%d] Data is unsorted! \n", sett->cnt);
+			else
+				printf("[ReconROS_Node_%d] Data is sorted \n", sett->cnt);
+
+			clear_data((uint32_t*)sett->msg, BLOCK_SIZE);
 		}
 
 		ros_subscriber_destroy(&resources_subdata[sett->cnt]);
 
-		if(check_data((uint32_t*)sett->msg, BLOCK_SIZE) != 0)
-			printf("[ReconROS_Node_%d] Data is unsorted! \n", sett->cnt);
-		else
-			printf("[ReconROS_Node_%d] Data is sorted \n", sett->cnt);
+
 
 	}
 	else if(sett->mode == MODE_NONE)

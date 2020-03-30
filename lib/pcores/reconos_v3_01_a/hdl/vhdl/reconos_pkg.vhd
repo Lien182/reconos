@@ -88,6 +88,11 @@ package reconos_pkg is
 
 	constant OSIF_INTERRUPTED               : std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0) := x"000000FF";
 
+
+	constant OSIF_CMD_ROS_PUBLISH           : std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0) := x"00000090";
+	constant OSIF_CMD_ROS_TAKE           	: std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0) := x"00000091";
+	constant OSIF_CMD_ROS_TRYTAKE           : std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0) := x"00000091";
+
 	--
 	-- Definition of memif commands
 	--
@@ -619,6 +624,55 @@ package reconos_pkg is
 	);
 
 	--
+	-- Publishing of a byte array from the main memory at addr with length len
+	--
+	--   i_osif - i_osif_t record
+	--   o_osif - o_osif_t record
+	--   handle - index representing the resource in the resource array
+	--   addr   - address in the main memory
+	--   len    - length of data
+	--   result - indicates if the publishing was successfull
+	--   done   - indicates when call finished
+	--
+	procedure osif_ros_publish (
+		signal i_osif : in  i_osif_t;
+		signal o_osif : out o_osif_t;
+		handle        : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal addr   : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal len    : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal result : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		variable done : out boolean
+	);
+
+	--
+	-- @see header
+	--
+	procedure osif_ros_take (
+		signal i_osif : in  i_osif_t;
+		signal o_osif : out o_osif_t;
+		handle        : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal dest   : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal len    : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		variable done : out boolean
+	);
+
+	--
+	-- @see header
+	--
+	procedure osif_ros_trytake (
+		signal i_osif : in  i_osif_t;
+		signal o_osif : out o_osif_t;
+		handle        : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal dest   : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal len    : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal result : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		variable done : out boolean
+	);	
+
+
+
+
+	--
 	-- Gets the pointer to the initialization data of the ReconOS thread
 	-- specified by reconos_hwt_setinitdata.
 	--
@@ -1090,6 +1144,67 @@ package body reconos_pkg is
 		end case;
 	end procedure osif_call_1_2;
 
+	procedure osif_call_1_3 (
+		signal i_osif : in  i_osif_t;
+		signal o_osif : out o_osif_t;
+		call_id       : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		arg0          : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal ret0   : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal ret1   : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal ret2   : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		variable done : out boolean
+	) is begin
+		done := False;
+
+		case i_osif.step is
+			when 0 =>
+				o_osif.hw2sw_we <= '1';
+				o_osif.hw2sw_data <= call_id;
+
+				o_osif.step <= 1;
+
+			when 1 =>
+				if i_osif.hw2sw_full = '0' then
+					o_osif.hw2sw_data <= arg0;
+
+					o_osif.step <= 2;
+				end if;
+
+			when 2 =>
+				if i_osif.hw2sw_full = '0' then
+					o_osif.hw2sw_we <= '0';
+					o_osif.sw2hw_re <= '1';
+
+					o_osif.step <= 3;
+				end if;
+				
+			when 3 =>
+				if i_osif.sw2hw_empty = '0' then
+					ret0 <= i_osif.sw2hw_data;
+
+					o_osif.step <= 4;
+				end if;
+
+			when 4 =>
+				if i_osif.sw2hw_empty = '0' then
+					ret1 <= i_osif.sw2hw_data;
+
+					o_osif.step <= 5;
+				end if;
+				
+			when 5 =>
+				if i_osif.sw2hw_empty = '0' then
+					ret2 <= i_osif.sw2hw_data;
+					o_osif.sw2hw_re <= '0';
+
+					o_osif.step <= 6;
+				end if;
+
+			when others =>
+					done := True;
+					o_osif.step <= 0;
+		end case;
+	end procedure osif_call_1_3;
 	--
 	-- @see header
 	--
@@ -1146,6 +1261,68 @@ package body reconos_pkg is
 				o_osif.step <= 0;
 		end case;
 	end procedure osif_call_2_1;
+
+	procedure osif_call_3_1 (
+		signal i_osif : in  i_osif_t;
+		signal o_osif : out o_osif_t;
+		call_id       : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		arg0          : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		arg1          : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		arg2          : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal ret0   : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		variable done : out boolean
+	) is begin
+		done := False;
+
+		case i_osif.step is
+			when 0 =>
+				o_osif.hw2sw_we <= '1';
+				o_osif.hw2sw_data <= call_id;
+
+				o_osif.step <= 1;
+
+			when 1 =>
+				if i_osif.hw2sw_full = '0' then
+					o_osif.hw2sw_data <= arg0;
+
+					o_osif.step <= 2;
+				end if;
+
+			when 2 =>
+				if i_osif.hw2sw_full = '0' then
+					o_osif.hw2sw_data <= arg1;
+
+					o_osif.step <= 3;
+				end if;
+
+			when 3 =>
+				if i_osif.hw2sw_full = '0' then
+					o_osif.hw2sw_data <= arg2;
+
+					o_osif.step <= 4;
+				end if;
+
+			when 4 =>
+				if i_osif.hw2sw_full = '0' then
+					o_osif.hw2sw_we <= '0';
+					o_osif.sw2hw_re <= '1';
+
+					o_osif.step <= 5;
+				end if;
+
+			when 5 =>
+				if i_osif.sw2hw_empty = '0' then
+					ret0 <= i_osif.sw2hw_data;
+					o_osif.sw2hw_re <= '0';
+
+					o_osif.step <= 6;
+				end if;
+
+			when others =>
+				done := True;
+				o_osif.step <= 0;
+		end case;
+	end procedure osif_call_3_1;
 
 	--
 	-- @see header
@@ -1306,6 +1483,50 @@ package body reconos_pkg is
 	) is begin
 		osif_call_1_2(i_osif, o_osif, OSIF_CMD_MBOX_TRYGET, handle, word, result, done);
 	end procedure osif_mbox_tryget;
+
+	--
+	-- @see header
+	--
+	procedure osif_ros_publish (
+		signal i_osif : in  i_osif_t;
+		signal o_osif : out o_osif_t;
+		handle        : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal addr   : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal len    : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal result : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		variable done : out boolean
+	) is begin
+		osif_call_3_1(i_osif, o_osif, OSIF_CMD_ROS_PUBLISH, handle, addr, len, result, done);
+	end procedure osif_ros_publish;
+
+	--
+	-- @see header
+	--
+	procedure osif_ros_take (
+		signal i_osif : in  i_osif_t;
+		signal o_osif : out o_osif_t;
+		handle        : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal dest   : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal len    : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		variable done : out boolean
+	) is begin
+		osif_call_1_2(i_osif, o_osif, OSIF_CMD_ROS_TAKE, handle, dest, len, done);
+	end procedure osif_ros_take;
+
+	--
+	-- @see header
+	--
+	procedure osif_ros_trytake (
+		signal i_osif : in  i_osif_t;
+		signal o_osif : out o_osif_t;
+		handle        : in  std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal dest   : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal len    : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		signal result : out std_logic_vector(C_OSIF_DATA_WIDTH - 1 downto 0);
+		variable done : out boolean
+	) is begin
+		osif_call_1_3(i_osif, o_osif, OSIF_CMD_ROS_TRYTAKE, handle, dest, len, result, done);
+	end procedure osif_ros_trytake;	
 
 	--
 	-- @see header

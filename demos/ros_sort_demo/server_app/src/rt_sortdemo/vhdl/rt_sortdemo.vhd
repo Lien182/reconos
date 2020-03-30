@@ -7,6 +7,9 @@ use ieee.math_real.all;
 library reconos_v3_01_a;
 use reconos_v3_01_a.reconos_pkg.all;
 
+library rt_sortdemo_v1_00_a;
+use rt_sortdemo_v1_00_a.reconos_thread_pkg.all;
+
 entity rt_sortdemo is
 	port (
 		-- OSIF FIFO ports
@@ -37,7 +40,7 @@ end entity rt_sortdemo;
 
 architecture implementation of rt_sortdemo is
 	type STATE_TYPE is (
-					STATE_INIT,
+					STATE_INIT,STATE_GET_INIT_DATA,
 					STATE_GET_ADDR,STATE_READ,STATE_SORTING,
 					STATE_WRITE,STATE_ACK,STATE_THREAD_EXIT);
 
@@ -71,11 +74,10 @@ architecture implementation of rt_sortdemo is
 
 	type LOCAL_MEMORY_T is array (0 to C_LOCAL_RAM_SIZE-1) of std_logic_vector(31 downto 0);
 	
-	constant MBOX_RECV  : std_logic_vector(31 downto 0) := x"00000000";
-	constant MBOX_SEND  : std_logic_vector(31 downto 0) := x"00000001";
-
 	signal addr     : std_logic_vector(31 downto 0);
+	signal dest_addr: std_logic_vector(31 downto 0);
 	signal len      : std_logic_vector(31 downto 0);
+	signal len_recv : std_logic_vector(31 downto 0);
 	signal state    : STATE_TYPE;
 	signal i_osif   : i_osif_t;
 	signal o_osif   : o_osif_t;
@@ -208,30 +210,33 @@ begin
 			done := False;
 			addr <= (others => '0');
 			len <= (others => '0');
+			len_recv <= (others => '0');
 			sort_start <= '0';
 		elsif rising_edge(HWT_Clk) then
 			case state is
 				when STATE_INIT =>
 					osif_read(i_osif, o_osif, ignore, done);
 					if done then
-						state <= STATE_GET_ADDR;
+						state <= STATE_GET_INIT_DATA;
 					end if;
+
+				when STATE_GET_INIT_DATA =>
+					osif_get_init_data(i_osif, o_osif, dest_addr, done);
+					if done then
+					   state <= STATE_GET_ADDR;
+				   	end if;
 
 				-- get address via mbox: the data will be copied from this address to the local ram in the next states
 				when STATE_GET_ADDR =>
-					osif_mbox_get(i_osif, o_osif, MBOX_RECV, addr, done);
+					osif_ros_take(i_osif, o_osif, RESOURCES_SUBDATA, addr, len_recv, done);
 					if done then
-						if (addr = X"FFFFFFFF") then
-							state <= STATE_THREAD_EXIT;
-						else
-							len               <= conv_std_logic_vector(C_LOCAL_RAM_SIZE_IN_BYTES,32);
-							state             <= STATE_READ;
-						end if;
+						len               <= conv_std_logic_vector(C_LOCAL_RAM_SIZE_IN_BYTES,32);
+						state             <= STATE_READ;
 					end if;
 				
 				-- copy data from main memory to local memory
 				when STATE_READ =>
-					memif_read(i_ram,o_ram,i_memif,o_memif,addr(31 downto 2) & "00",X"00000000",len,done);
+					memif_read(i_ram,o_ram,i_memif,o_memif,addr,X"00000000",len,done);
 					if done then
 						sort_start <= '1';
 						state <= STATE_SORTING;
@@ -249,14 +254,14 @@ begin
 					
 				-- copy data from local memory to main memory
 				when STATE_WRITE =>
-					memif_write(i_ram,o_ram,i_memif,o_memif,X"00000000",addr,len,done);
+					memif_write(i_ram,o_ram,i_memif,o_memif,X"00000000",dest_addr,len,done);
 					if done then
 						state <= STATE_ACK;
 					end if;
 				
 				-- send mbox that signals that the sorting is finished
 				when STATE_ACK =>
-					osif_mbox_put(i_osif, o_osif, MBOX_SEND, addr, ignore, done);
+					osif_ros_publish(i_osif, o_osif, RESOURCES_PUBDATA, dest_addr, len, ignore, done);
 					if done then state <= STATE_GET_ADDR; end if;
 
 				-- thread exit

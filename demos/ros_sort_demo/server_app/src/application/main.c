@@ -86,20 +86,13 @@ int main(int argc, char **argv) {
 	unsigned int t_start, t_gen, t_sort, t_merge, t_check;
 #endif
 
-	if (argc != 4) {
+	if (argc != 3) {
 		print_help();
 		return 0;
 	}
 
 	num_hwts = atoi(argv[1]);
 	num_swts = atoi(argv[2]);
-	num_blocks = atoi(argv[3]);
-
-	if (num_blocks % 2 != 0)
-	{
-		print_help();
-		return 0;
-	}
 
 	printf("Start init \n");
 
@@ -111,7 +104,7 @@ int main(int argc, char **argv) {
 	log("creating %d hw-threads(clk = %d):", num_hwts,clk);
 	for (i = 0; i < num_hwts; i++) {
 		log(" %d", i);
-		reconos_thread_create_hwt_sortdemo(0);
+		reconos_thread_create_hwt_sortdemo(malloc(BLOCK_SIZE*sizeof(uint32_t)));
 	}
 	log("\n");
 

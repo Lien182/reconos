@@ -47,8 +47,6 @@ int ros_publisher_destroy(struct ros_publisher_t *ros_pub)
   return rcl_publisher_fini(&ros_pub->rcl_pub, ros_pub->node);
 }
 
-std_msgs__msg__String pub_msg;
-
 int ros_publisher_publish(struct ros_publisher_t *ros_pub, uint8_t * msg, uint32_t msg_size)
 {
   rcl_ret_t rc;
@@ -60,9 +58,6 @@ int ros_publisher_publish(struct ros_publisher_t *ros_pub, uint8_t * msg, uint32
   seri_msg.buffer_capacity = ros_pub->max_msg_size;
   seri_msg.allocator = rcl_get_default_allocator();
   
-
-  //rosidl_generator_c__String__assignn(&pub_msg, (char*)msg, ros_pub->max_msg_size);
-  //rc = rcl_publish(&ros_pub->rcl_pub, &pub_msg, NULL);
   rc = rcl_publish_serialized_message(&ros_pub->rcl_pub, &seri_msg, NULL);
   if (rc == RCL_RET_OK) {
     debug("[ROS Publisher] Published message!\n");

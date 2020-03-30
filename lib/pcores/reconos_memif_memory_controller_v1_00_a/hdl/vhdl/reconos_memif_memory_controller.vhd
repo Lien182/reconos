@@ -156,10 +156,10 @@ begin
 
 	-- == Static assignemnts of signals ===================================
 
-	M_AXI_AWCACHE <= b"0011";
-	M_AXI_ARCACHE <= b"0011";
-	M_AXI_AWUSER  <= b"00111";
-	M_AXI_ARUSER  <= b"00111";
+	M_AXI_AWCACHE <= (others => '1');
+	M_AXI_ARCACHE <= (others => '1');
+	M_AXI_AWUSER  <= (others => '1');
+	M_AXI_ARUSER  <= (others => '1');
 
 	bus2ip_clk    <= M_AXI_ACLK;
 	bus2ip_resetn <= M_AXI_ARESETN;
